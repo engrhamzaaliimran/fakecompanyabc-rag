@@ -9,7 +9,7 @@ embeddings = OllamaEmbeddings(
 
 text = "Employees in Germany receive 30 days of annual leave."
 
-# embed_query() converts one piece of text into one numerical vector.
+# embed_query() converts one piece of text into one numerical vector.but 
 vector = embeddings.embed_query(text)
 
 print("Original text:")
