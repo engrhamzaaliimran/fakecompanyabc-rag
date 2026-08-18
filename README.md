@@ -11,5 +11,6 @@ The project starts with a fully local, open-source stack:
 * **Ollama** — local model runtime
 * **Qwen3 1.7B** — generative language model
 * **nomic-embed-text** — embedding model
+* **Langchain** — RAG framework
 
 My Ubuntu machine is **CPU-only**, so I intentionally started with relatively lightweight models that can run locally without a GPU.
