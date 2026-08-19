@@ -37,3 +37,14 @@ Hard: the answer can need information from more than one place, or there can be 
 I manually checked a few questions by opening the respective files and confirming the answers and exact text.
 
 The idea is to use this ground truth to test the retriever before adding the LLM. I want to see if the correct information is retrieved and how high it appears in the results. For this I plan to use Hit@K, Recall@K, Precision@K and MRR.
+
+### Results
+
+| Metric | K=1 | K=3 | K=5 |
+|---|---:|---:|---:|
+| Hit@K | 0.800 | 1.000 | 1.000 |
+| Recall@K | 0.775 | 1.000 | 1.000 |
+| Precision@K | 0.800 | 0.367 | 0.220 |
+| MRR | - | - | 0.883 |
+
+The results make sense because increasing `K` retrieves more chunks, so the chance of finding all relevant information increases. After `K=3`, recall does not improve further, while precision drops because more irrelevant chunks are also retrieved.
