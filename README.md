@@ -23,3 +23,17 @@ I started by revisiting simple RAG concepts. Then progressively kept building up
 
 ## Benchmarking retrieval
 Since, in the stable state of source file 04, the retrieval was tested and it was working. Before moving towards the LLM. Once needs to benchmark the retrieval, and I did so after this stage. 
+
+### Ground Truth
+
+I created a ground truth with the help of ChatGPT. I asked it to make questions from the FakeCompanyABC policy files with easy, medium and hard levels. For each question, the JSON file also has the expected answer, the file where the answer should be, the related section, and the exact text where the answer is written.
+
+For the levels, I used a simple idea:
+
+Easy: the answer is directly written in one place, like number of leave days or hotel limit.
+Medium: the answer needs some more understanding of the rule or condition, for example whether manager approval is enough or which policy should be used.
+Hard: the answer can need information from more than one place, or there can be similar values that can confuse retrieval, for example current and old hotel limits.
+
+I manually checked a few questions by opening the respective files and confirming the answers and exact text.
+
+The idea is to use this ground truth to test the retriever before adding the LLM. I want to see if the correct information is retrieved and how high it appears in the results. For this I plan to use Hit@K, Recall@K, Precision@K and MRR.

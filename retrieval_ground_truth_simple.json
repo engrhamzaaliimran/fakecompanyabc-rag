@@ -1,0 +1,323 @@
+{
+  "name": "FakeCompanyABC Retrieval Ground Truth",
+  "version": "1.0",
+  "provenance": {
+    "dataset": "user-uploaded dataset.zip"
+  },
+  "design": {
+    "source_based": true,
+    "chunk_ids_in_ground_truth": false
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "category": "annual_leave",
+      "difficulty": "easy",
+      "question": "How many days of paid annual leave do full-time employees in Germany receive per calendar year?",
+      "expected_answer": "30 working days",
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Germany",
+          "exact_text": "Full-time employees whose contractual work location is Germany receive **30 working days of paid annual leave per calendar year**."
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "category": "annual_leave",
+      "difficulty": "easy",
+      "question": "How many days of paid annual leave do full-time employees in Pakistan receive per calendar year?",
+      "expected_answer": "24 working days",
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Pakistan",
+          "exact_text": "Full-time employees whose contractual work location is Pakistan receive **24 working days of paid annual leave per calendar year**."
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "question": "How many unused annual-leave days may be carried forward, and by what date should they normally be used?",
+      "expected_answer": "A maximum of 5 unused annual-leave days may be carried forward, and they should normally be used by 31 March of the following year.",
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Employees may carry forward a maximum of **5 unused annual-leave days** into the following calendar year."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Carried-forward leave must normally be used by **31 March** of the following year."
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "category": "annual_leave",
+      "difficulty": "easy",
+      "question": "How far in advance should leave of more than 5 consecutive working days normally be requested?",
+      "expected_answer": "At least 3 weeks in advance",
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "4. Leave requests",
+          "exact_text": "Leave of **more than 5 consecutive working days** should normally be requested at least **3 weeks in advance**."
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "question": "Is annual-leave entitlement based on nationality or on contractual work location?",
+      "expected_answer": "It is based on the employee's contractual work location, not nationality, citizenship, or temporary work location.",
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "6. Important interpretation note",
+          "exact_text": "The annual entitlement is based on the employee's **contractual work location**, not nationality, citizenship, or the country from which the employee happens to work temporarily."
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "category": "expenses",
+      "difficulty": "easy",
+      "question": "Within how many calendar days should employees normally submit business-expense claims?",
+      "expected_answer": "30 calendar days",
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "1. Submission deadline",
+          "exact_text": "Employees must normally submit business-expense claims within **30 calendar days** of the expense date."
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "category": "expenses",
+      "difficulty": "easy",
+      "question": "Above what euro amount is a receipt required for an individual expense?",
+      "expected_answer": "Above EUR 20",
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "2. Receipts",
+          "exact_text": "- **EUR 20** for expenses paid in euros;"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "category": "expenses",
+      "difficulty": "easy",
+      "question": "What is the standard maximum reimbursable meal expense per person in Germany?",
+      "expected_answer": "EUR 35",
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Germany | EUR 35 |"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "category": "cross_reference",
+      "difficulty": "medium",
+      "question": "Which policy should employees use to check hotel room-rate limits?",
+      "expected_answer": "The current Business Travel Policy, HR-TRV-0173",
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "question": "How many company-paid transition days may an eligible full-time employee with at least 12 months of continuous service receive?",
+      "expected_answer": "Up to 5 company-paid transition days",
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "In addition to any statutory entitlement, eligible full-time employees who have completed at least **12 months of continuous service** may receive up to **5 company-paid transition days** associated with the birth or adoption of a child."
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "category": "parental_leave",
+      "difficulty": "easy",
+      "question": "For how long may an employee returning from parental leave request a temporary reduced-work schedule?",
+      "expected_answer": "Up to 8 weeks",
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "4. Return-to-work arrangement",
+          "exact_text": "An employee returning from parental leave may request a temporary reduced-work schedule for up to **8 weeks**."
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "category": "remote_work",
+      "difficulty": "easy",
+      "question": "How many days per week may employees contracted in Germany normally work remotely?",
+      "expected_answer": "Up to 3 days per week",
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "question": "Is manager approval alone sufficient for cross-border remote work?",
+      "expected_answer": "No. Cross-border remote work requires prior written approval from both HR and the employee's manager.",
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Cross-border remote work requires prior written approval from **both HR and the employee's manager** because tax, immigration, payroll, information-security, and employment-law requirements may apply."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Manager approval alone is not sufficient for cross-border remote work."
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "category": "remote_work",
+      "difficulty": "easy",
+      "question": "For how long may a department director approve a temporary exception to the weekly office-attendance requirement?",
+      "expected_answer": "Up to 4 consecutive weeks",
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "4. Temporary exceptions",
+          "exact_text": "A department director may approve a temporary exception to the weekly office-attendance requirement for up to **4 consecutive weeks**."
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "category": "travel_current",
+      "difficulty": "hard",
+      "question": "What is the current standard nightly hotel limit in Germany for travel from 2026 onward?",
+      "expected_answer": "EUR 160 per night",
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "The following nightly hotel limits apply from **1 January 2026**:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        }
+      ]
+    },
+    {
+      "id": "q16",
+      "category": "travel_historical",
+      "difficulty": "hard",
+      "question": "What was the standard nightly hotel limit in Germany during 2025 under version 3.2?",
+      "expected_answer": "EUR 130 per night",
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "Under **version 3.2**, effective from 1 January 2025 through 31 December 2025, the hotel limits were:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Germany | EUR 130 |"
+        }
+      ]
+    },
+    {
+      "id": "q17",
+      "category": "exact_identifier",
+      "difficulty": "medium",
+      "question": "What policy does the identifier HR-TRV-0173 refer to?",
+      "expected_answer": "The FakeCompanyABC Business Travel Policy",
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "7. Exact identifier note",
+          "exact_text": "This policy is identified as **HR-TRV-0173**. Questions referring to \"TRV-0173\", \"HR-TRV-0173\", or \"travel policy 0173\" refer to this policy."
+        }
+      ]
+    },
+    {
+      "id": "q18",
+      "category": "multi_evidence",
+      "difficulty": "hard",
+      "question": "How did the standard Germany hotel limit change from 2025 to 2026?",
+      "expected_answer": "It increased from EUR 130 per night in 2025 to EUR 160 per night from 2026.",
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Germany | EUR 130 |"
+        }
+      ]
+    },
+    {
+      "id": "q19",
+      "category": "travel",
+      "difficulty": "easy",
+      "question": "What travel class may be booked for a flight longer than 6 hours with manager approval?",
+      "expected_answer": "Premium economy",
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "2. Air travel",
+          "exact_text": "For flights with a scheduled duration of **more than 6 hours**, premium economy may be booked with manager approval."
+        }
+      ]
+    },
+    {
+      "id": "q20",
+      "category": "cross_document",
+      "difficulty": "hard",
+      "question": "After parental leave, which policy governs remote work and how many remote days per week may a Germany-based employee normally have?",
+      "expected_answer": "Remote work must follow HR-RMT-0204, and a Germany-based employee may normally work remotely up to 3 days per week.",
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "5. Remote work after parental leave",
+          "exact_text": "Any remote-work arrangement must follow **Remote Work Policy HR-RMT-0204** unless a specific temporary exception is approved."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    }
+  ]
+}
