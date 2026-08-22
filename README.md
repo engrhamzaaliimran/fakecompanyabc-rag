@@ -447,3 +447,39 @@ Final Top-K
 The idea is to remove less relevant chunks even when they are coming from the correct policy file.
 
 Once I am satisfied with this retrieval stage, I will move towards the **generation part of the RAG pipeline**, where the final retrieved context will be passed to the local LLM to generate a grounded answer.
+
+### Current Ranking of Correct Evidence
+
+Before adding reranking, I also checked where the first correct ground-truth evidence currently appears in the Top-3 results.
+
+| First Correct Evidence Rank | Questions | Count |
+|---|---|---:|
+| R1 | Q01–Q06, Q08, Q10–Q15, Q17, Q19, Q20 | 16 / 20 |
+| R2 | Q07, Q18 | 2 / 20 |
+| R3 | Q09, Q16 | 2 / 20 |
+
+This means:
+
+| Ranking Measure | Result |
+|---|---:|
+| Correct evidence at R1 | 16 / 20 = 80% |
+| Correct evidence within R2 | 18 / 20 = 90% |
+| Correct evidence within R3 | 20 / 20 = 100% |
+| MRR@3 | 0.883 |
+
+So the dense retriever is already ranking the correct evidence relatively high. In 16 out of 20 questions, the first correct evidence is already at Rank 1.
+
+The remaining cases are useful for understanding the next problem:
+
+| Question | Current Correct Evidence Position | Observation |
+|---|---|---|
+| Q07 | R2 | Correct policy is selected, but the exact receipt-threshold chunk is below another chunk from the same policy |
+| Q09 | R3 | The strict ground truth expects the Expense Policy, although the Travel Policy chunks at R1 and R2 are also logically useful |
+| Q16 | R3 | Correct Travel Policy is selected, but the exact 2025/version 3.2 evidence ranks below other Travel Policy chunks |
+| Q18 | R2 and R3 | The question requires multiple pieces of evidence and both are retrieved, but neither is currently R1 |
+
+This makes the next reranking goal more specific:
+
+> Can a reranker move Q07's exact evidence from R2 to R1 and Q16's exact evidence from R3 to R1, while not damaging the 16 questions that are already correct at R1?
+
+The goal is therefore not simply to retrieve more chunks. The required evidence is already present in the Top-3 for all questions. The next goal is to improve the ordering of those candidate chunks so that the most useful evidence appears earlier.
