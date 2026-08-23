@@ -1,0 +1,2427 @@
+{
+  "name": "FakeCompanyABC Retrieval Ground Truth - 100 Question Hard Benchmark",
+  "version": "2.0",
+  "dataset": "dataset(1).zip",
+  "design": {
+    "source_based": true,
+    "chunk_ids_in_ground_truth": false,
+    "independent_of": [
+      "chunk_size",
+      "chunk_overlap",
+      "splitter_type",
+      "embedding_model",
+      "vector_database",
+      "top_k",
+      "reranker"
+    ],
+    "purpose": "A larger and deliberately harder retrieval benchmark created before adding reranking, with paraphrases, thresholds, temporal confusion, negative conditions, scenarios, cross-policy questions, and multi-evidence questions.",
+    "relevance_definition": "Evidence relevance remains exact source evidence. relevant_sources is additionally provided for coarse source-level evaluation and may include referenced policies that are legitimately useful even when the exact answer sentence is in another file.",
+    "verification": "Every evidence exact_text string was programmatically verified as a verbatim substring of its named source Markdown file.",
+    "evaluation_note": "Freeze retrieval settings before using this benchmark for comparison. Do not tune thresholds on these same 100 questions and then report the tuned score as an unbiased test result."
+  },
+  "summary": {
+    "difficulty_counts": {
+      "medium": 36,
+      "hard": 64
+    },
+    "category_counts": {
+      "annual_leave": 15,
+      "expenses": 15,
+      "parental_leave": 15,
+      "remote_work": 15,
+      "travel": 18,
+      "travel_current": 3,
+      "travel_historical": 4,
+      "cross_policy": 15
+    },
+    "multi_source_questions": 19,
+    "multi_evidence_questions": 51
+  },
+  "questions": [
+    {
+      "id": "q001",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "paraphrase",
+        "location_rule"
+      ],
+      "question": "A full-time employee is German but their employment contract is based in Pakistan. How much annual leave does the company policy give them each year?",
+      "expected_answer": "24 working days, because entitlement follows contractual work location rather than nationality.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Pakistan",
+          "exact_text": "Full-time employees whose contractual work location is Pakistan receive **24 working days of paid annual leave per calendar year**."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "6. Important interpretation note",
+          "exact_text": "The annual entitlement is based on the employee's **contractual work location**, not nationality, citizenship, or the country from which the employee happens to work temporarily."
+        }
+      ]
+    },
+    {
+      "id": "q002",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "location_rule",
+        "misleading_country"
+      ],
+      "question": "A Germany-contracted employee spends several months temporarily working from Pakistan. Without a contract change, which annual-leave entitlement continues to apply?",
+      "expected_answer": "The Germany entitlement continues to apply: 30 working days per calendar year.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- A Germany-based employee temporarily working from Pakistan still follows the Germany annual-leave entitlement unless the employment contract is changed."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Germany",
+          "exact_text": "Full-time employees whose contractual work location is Germany receive **30 working days of paid annual leave per calendar year**."
+        }
+      ]
+    },
+    {
+      "id": "q003",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold",
+        "scenario"
+      ],
+      "question": "An employee finishes the year with 8 unused leave days. What is the maximum number the policy lets them take into the next year?",
+      "expected_answer": "5 days.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Employees may carry forward a maximum of **5 unused annual-leave days** into the following calendar year."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- An employee contracted in Germany with 8 unused days at year-end may carry forward only 5 days."
+        }
+      ]
+    },
+    {
+      "id": "q004",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "date_rule",
+        "exception"
+      ],
+      "question": "If carried-over leave is still unused on 1 April, what normally happens, and what can prevent that outcome?",
+      "expected_answer": "It normally expires after 31 March unless HR approved an exception in writing.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Carried-forward leave must normally be used by **31 March** of the following year. Any remaining carried-forward leave expires after that date unless HR has approved an exception in writing."
+        }
+      ]
+    },
+    {
+      "id": "q005",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold",
+        "paraphrase"
+      ],
+      "question": "Someone wants six consecutive working days off. What notice period should they normally allow?",
+      "expected_answer": "At least 3 weeks in advance.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "4. Leave requests",
+          "exact_text": "Leave of **more than 5 consecutive working days** should normally be requested at least **3 weeks in advance**."
+        }
+      ]
+    },
+    {
+      "id": "q006",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold_boundary"
+      ],
+      "question": "Someone wants exactly five consecutive working days off. What notice period normally applies?",
+      "expected_answer": "At least 5 working days in advance.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "4. Leave requests",
+          "exact_text": "Leave of **5 consecutive working days or fewer** should normally be requested at least **5 working days in advance**."
+        }
+      ]
+    },
+    {
+      "id": "q007",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "boundary_comparison"
+      ],
+      "question": "How does the normal advance-notice rule change when a leave request goes from exactly 5 consecutive working days to 6?",
+      "expected_answer": "Exactly 5 days normally needs 5 working days of notice; more than 5 days normally needs at least 3 weeks.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "4. Leave requests",
+          "exact_text": "Leave of **5 consecutive working days or fewer** should normally be requested at least **5 working days in advance**."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "4. Leave requests",
+          "exact_text": "Leave of **more than 5 consecutive working days** should normally be requested at least **3 weeks in advance**."
+        }
+      ]
+    },
+    {
+      "id": "q008",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "approval"
+      ],
+      "question": "Does giving sufficient advance notice remove the need for manager approval for annual leave?",
+      "expected_answer": "No. All annual-leave requests still require approval from the direct manager.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "4. Leave requests",
+          "exact_text": "All annual-leave requests require approval from the employee's direct manager."
+        }
+      ]
+    },
+    {
+      "id": "q009",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "probation",
+        "negative"
+      ],
+      "question": "Does being on probation reduce a full-time employee’s annual-leave entitlement?",
+      "expected_answer": "No. The entitlement itself is not reduced during probation, although requests still depend on business needs and manager approval.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "5. Probation",
+          "exact_text": "Employees may request annual leave during probation, but approval depends on business needs and manager approval. The annual entitlement itself is not reduced because an employee is on probation."
+        }
+      ]
+    },
+    {
+      "id": "q010",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "part_time"
+      ],
+      "question": "How is annual leave determined for a part-time employee?",
+      "expected_answer": "It is calculated on a pro-rata basis according to contracted working days.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement",
+          "exact_text": "Part-time employees receive annual leave on a pro-rata basis according to their contracted working days."
+        }
+      ]
+    },
+    {
+      "id": "q011",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "carry_forward"
+      ],
+      "question": "A Pakistan-contracted employee has 3 unused annual-leave days at year-end. How many of those days can be carried forward?",
+      "expected_answer": "All 3 days.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- An employee contracted in Pakistan with 3 unused days may carry all 3 days forward."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Employees may carry forward a maximum of **5 unused annual-leave days** into the following calendar year."
+        }
+      ]
+    },
+    {
+      "id": "q012",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "multi_evidence",
+        "location_rule"
+      ],
+      "question": "Compare the standard annual-leave entitlement of full-time employees contracted in Germany and Pakistan.",
+      "expected_answer": "Germany: 30 working days per year; Pakistan: 24 working days per year.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Germany",
+          "exact_text": "Full-time employees whose contractual work location is Germany receive **30 working days of paid annual leave per calendar year**."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Pakistan",
+          "exact_text": "Full-time employees whose contractual work location is Pakistan receive **24 working days of paid annual leave per calendar year**."
+        }
+      ]
+    },
+    {
+      "id": "q013",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "paraphrase",
+        "location_rule"
+      ],
+      "question": "Which matters for annual-leave entitlement: citizenship, where the employee happens to be working temporarily, or the location written into the employment contract?",
+      "expected_answer": "The contractual work location controls the entitlement.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "6. Important interpretation note",
+          "exact_text": "The annual entitlement is based on the employee's **contractual work location**, not nationality, citizenship, or the country from which the employee happens to work temporarily."
+        }
+      ]
+    },
+    {
+      "id": "q014",
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "manager_approval",
+        "probation"
+      ],
+      "question": "Can an employee on probation request annual leave, and what determines approval?",
+      "expected_answer": "Yes. They may request it, but approval depends on business needs and manager approval.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "5. Probation",
+          "exact_text": "Employees may request annual leave during probation, but approval depends on business needs and manager approval. The annual entitlement itself is not reduced because an employee is on probation."
+        }
+      ]
+    },
+    {
+      "id": "q015",
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "multi_condition",
+        "carry_forward"
+      ],
+      "question": "An employee carries unused leave into the next year. State both the normal cap and the normal deadline for using those carried-forward days.",
+      "expected_answer": "A maximum of 5 days may be carried forward, and they should normally be used by 31 March.",
+      "relevant_sources": [
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Employees may carry forward a maximum of **5 unused annual-leave days** into the following calendar year."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Carried-forward leave must normally be used by **31 March** of the following year. Any remaining carried-forward leave expires after that date unless HR has approved an exception in writing."
+        }
+      ]
+    },
+    {
+      "id": "q016",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "paraphrase",
+        "deadline"
+      ],
+      "question": "How long after a business purchase does an employee normally have to file the reimbursement claim?",
+      "expected_answer": "30 calendar days from the expense date.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "1. Submission deadline",
+          "exact_text": "Employees must normally submit business-expense claims within **30 calendar days** of the expense date."
+        }
+      ]
+    },
+    {
+      "id": "q017",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "late_submission",
+        "consequence"
+      ],
+      "question": "What additional requirement appears when an expense claim is submitted after the normal 30-day window?",
+      "expected_answer": "An explanation is required, and additional approval may also be required.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "1. Submission deadline",
+          "exact_text": "Claims submitted after 30 days require an explanation and may require additional approval."
+        }
+      ]
+    },
+    {
+      "id": "q018",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold",
+        "currency"
+      ],
+      "question": "For an expense paid in euros, above what amount does the general receipt requirement start?",
+      "expected_answer": "Above EUR 20.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "2. Receipts",
+          "exact_text": "- **EUR 20** for expenses paid in euros;"
+        }
+      ]
+    },
+    {
+      "id": "q019",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold",
+        "currency"
+      ],
+      "question": "For an expense paid in Pakistani rupees, above what amount is a receipt required?",
+      "expected_answer": "Above PKR 6,000.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "2. Receipts",
+          "exact_text": "- **PKR 6,000** for expenses paid in Pakistani rupees."
+        }
+      ]
+    },
+    {
+      "id": "q020",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "threshold_boundary",
+        "scenario"
+      ],
+      "question": "A EUR 18 taxi receipt is missing. Can the expense still be claimed under the general receipt threshold, and what information must still be recorded?",
+      "expected_answer": "Yes. A receipt is not required under the general threshold, but the date, amount, and business purpose still need to be provided.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "8. Examples",
+          "exact_text": "- A EUR 18 taxi expense does not require a receipt under the general receipt threshold, but the business purpose must still be recorded."
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "2. Receipts",
+          "exact_text": "For lower-value expenses without a receipt, the employee must still provide the date, amount, and business purpose."
+        }
+      ]
+    },
+    {
+      "id": "q021",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "meal_limit",
+        "location"
+      ],
+      "question": "What is the standard per-person meal reimbursement ceiling in Belgium?",
+      "expected_answer": "EUR 40 per meal.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Belgium | EUR 40 |"
+        }
+      ]
+    },
+    {
+      "id": "q022",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "meal_limit"
+      ],
+      "question": "Which has the higher standard meal limit, Germany or Belgium, and by how much?",
+      "expected_answer": "Belgium is higher by EUR 5: EUR 40 versus EUR 35 in Germany.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Belgium | EUR 40 |"
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Germany | EUR 35 |"
+        }
+      ]
+    },
+    {
+      "id": "q023",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "negative",
+        "meal_policy"
+      ],
+      "question": "Are alcoholic beverages covered by the standard meal allowance?",
+      "expected_answer": "No.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "Alcoholic beverages are not reimbursable under the standard meal allowance."
+        }
+      ]
+    },
+    {
+      "id": "q024",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_reference",
+        "policy_scope"
+      ],
+      "question": "If an employee wants to know whether a hotel rate is allowable, should they look up the meal limits in the expense policy or another policy?",
+      "expected_answer": "They should use the current Business Travel Policy, HR-TRV-0173; hotel limits are not defined by the expense policy.",
+      "relevant_sources": [
+        "expense_policy.md",
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "Hotel room-rate limits are **not defined by this policy**."
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        }
+      ]
+    },
+    {
+      "id": "q025",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "transportation"
+      ],
+      "question": "When can taxi or ride-hailing costs be reimbursed?",
+      "expected_answer": "When public transport is impractical, unavailable, or would create an unreasonable delay; the business reason should be included.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "5. Ground transportation",
+          "exact_text": "Taxi or ride-hailing expenses are reimbursable when public transport is impractical, unavailable, or would create an unreasonable delay. The business reason should be included in the expense claim."
+        }
+      ]
+    },
+    {
+      "id": "q026",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "mixed_receipt",
+        "negative"
+      ],
+      "question": "A single receipt contains both a client-related purchase and a personal item. What portion can be claimed?",
+      "expected_answer": "Only the business portion may be claimed.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "6. Personal purchases",
+          "exact_text": "If a receipt contains both business and personal items, only the business portion may be claimed."
+        }
+      ]
+    },
+    {
+      "id": "q027",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "reimbursement_timing"
+      ],
+      "question": "After finance finishes reviewing an approved claim, when is reimbursement normally made?",
+      "expected_answer": "With the next available payroll cycle.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "7. Reimbursement timing",
+          "exact_text": "Approved expenses are normally reimbursed with the next available payroll cycle after finance completes review."
+        }
+      ]
+    },
+    {
+      "id": "q028",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "threshold"
+      ],
+      "question": "A EUR 28 meal is being claimed. Does the example policy require a receipt?",
+      "expected_answer": "Yes.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "8. Examples",
+          "exact_text": "- A EUR 28 meal requires a receipt."
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "2. Receipts",
+          "exact_text": "- **EUR 20** for expenses paid in euros;"
+        }
+      ]
+    },
+    {
+      "id": "q029",
+      "category": "expenses",
+      "difficulty": "medium",
+      "challenge_types": [
+        "negative",
+        "personal_purchase"
+      ],
+      "question": "Can a purely personal purchase be reimbursed through the business-expense process?",
+      "expected_answer": "No.",
+      "relevant_sources": [
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "6. Personal purchases",
+          "exact_text": "Personal purchases are not reimbursable."
+        }
+      ]
+    },
+    {
+      "id": "q030",
+      "category": "expenses",
+      "difficulty": "hard",
+      "challenge_types": [
+        "policy_scope",
+        "cross_reference"
+      ],
+      "question": "Why are hotel limits intentionally absent from the expense policy?",
+      "expected_answer": "Because the expense policy governs how claims are submitted, while the Business Travel Policy defines allowable hotel rates.",
+      "relevant_sources": [
+        "expense_policy.md",
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "This is intentional: the expense policy defines how claims are submitted, while the travel policy defines allowable hotel rates."
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        }
+      ]
+    },
+    {
+      "id": "q031",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "legal_precedence",
+        "negative"
+      ],
+      "question": "If local law grants a better parental-leave entitlement than the company document, which one controls?",
+      "expected_answer": "Local law takes precedence.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "1. Scope",
+          "exact_text": "It does **not** replace statutory parental-leave rights. Where local law provides a greater entitlement or different requirement, local law takes precedence."
+        }
+      ]
+    },
+    {
+      "id": "q032",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "notification"
+      ],
+      "question": "Who should an employee inform when planning parental leave?",
+      "expected_answer": "HR and their manager, as early as reasonably possible.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "2. Notification",
+          "exact_text": "Employees should notify HR and their manager as early as reasonably possible when planning parental leave."
+        }
+      ]
+    },
+    {
+      "id": "q033",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "legal_precedence",
+        "notice"
+      ],
+      "question": "If legislation sets a specific parental-leave notice period, can the company’s general “as early as possible” wording replace it?",
+      "expected_answer": "No. The statutory notice requirement must be followed.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "2. Notification",
+          "exact_text": "Where a specific statutory notice period applies, the statutory requirement must be followed."
+        },
+        {
+          "source": "parental_leave.md",
+          "section": "2. Notification",
+          "exact_text": "Employees should notify HR and their manager as early as reasonably possible when planning parental leave."
+        }
+      ]
+    },
+    {
+      "id": "q034",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "eligibility",
+        "threshold"
+      ],
+      "question": "What length of continuous service is required before an eligible full-time employee may receive company-paid transition days?",
+      "expected_answer": "At least 12 months of continuous service.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "In addition to any statutory entitlement, eligible full-time employees who have completed at least **12 months of continuous service** may receive up to **5 company-paid transition days** associated with the birth or adoption of a child."
+        }
+      ]
+    },
+    {
+      "id": "q035",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "benefit_amount"
+      ],
+      "question": "What is the maximum number of company-paid transition days for an eligible full-time employee?",
+      "expected_answer": "Up to 5 days.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "In addition to any statutory entitlement, eligible full-time employees who have completed at least **12 months of continuous service** may receive up to **5 company-paid transition days** associated with the birth or adoption of a child."
+        }
+      ]
+    },
+    {
+      "id": "q036",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "eligibility"
+      ],
+      "question": "A full-time employee has 18 months of continuous service when a child is born. What company-paid transition-day benefit may they receive?",
+      "expected_answer": "Up to 5 company-paid transition days.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- An eligible full-time employee with 18 months of service may receive up to 5 company-paid transition days."
+        },
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "In addition to any statutory entitlement, eligible full-time employees who have completed at least **12 months of continuous service** may receive up to **5 company-paid transition days** associated with the birth or adoption of a child."
+        }
+      ]
+    },
+    {
+      "id": "q037",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "eligibility",
+        "negative"
+      ],
+      "question": "A full-time employee has only 8 months of continuous service. Are they eligible for the company-paid transition days under this policy?",
+      "expected_answer": "No, although statutory rights may still apply.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- An employee with only 8 months of continuous service is not eligible for the company-paid transition days under this policy, although statutory rights may still apply."
+        }
+      ]
+    },
+    {
+      "id": "q038",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "annual_leave_interaction"
+      ],
+      "question": "Do the company-paid transition days reduce the employee’s annual-leave balance?",
+      "expected_answer": "No.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "6. Annual leave interaction",
+          "exact_text": "Company-paid transition days are not deducted from the employee's annual-leave balance."
+        },
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "These transition days are separate from annual leave."
+        }
+      ]
+    },
+    {
+      "id": "q039",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "return_to_work"
+      ],
+      "question": "For how long can a returning employee request a temporary reduced-work schedule?",
+      "expected_answer": "Up to 8 weeks.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "4. Return-to-work arrangement",
+          "exact_text": "An employee returning from parental leave may request a temporary reduced-work schedule for up to **8 weeks**."
+        }
+      ]
+    },
+    {
+      "id": "q040",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "deadline",
+        "return_to_work"
+      ],
+      "question": "How far before the planned return date should a request for a temporary reduced-work schedule normally be submitted?",
+      "expected_answer": "At least 4 weeks before the planned return date.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "4. Return-to-work arrangement",
+          "exact_text": "The request should normally be submitted at least **4 weeks before** the planned return date."
+        }
+      ]
+    },
+    {
+      "id": "q041",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "approval",
+        "multi_condition"
+      ],
+      "question": "What factors determine whether a temporary reduced-work request after parental leave is approved?",
+      "expected_answer": "Role requirements, local law, and agreement with HR and the employee’s manager.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "4. Return-to-work arrangement",
+          "exact_text": "Approval depends on role requirements, local law, and agreement with HR and the employee's manager."
+        }
+      ]
+    },
+    {
+      "id": "q042",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_reference",
+        "remote_work"
+      ],
+      "question": "Does returning from parental leave automatically increase the normal remote-work allowance?",
+      "expected_answer": "No. Any remote-work arrangement must still follow Remote Work Policy HR-RMT-0204 unless a specific temporary exception is approved.",
+      "relevant_sources": [
+        "parental_leave.md",
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "5. Remote work after parental leave",
+          "exact_text": "Returning from parental leave does not automatically create an additional remote-work allowance."
+        },
+        {
+          "source": "parental_leave.md",
+          "section": "5. Remote work after parental leave",
+          "exact_text": "Any remote-work arrangement must follow **Remote Work Policy HR-RMT-0204** unless a specific temporary exception is approved."
+        }
+      ]
+    },
+    {
+      "id": "q043",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_reference",
+        "annual_leave"
+      ],
+      "question": "Which policy controls unused annual leave after parental leave?",
+      "expected_answer": "Annual Leave Policy HR-LEV-0101, including its carry-forward rules.",
+      "relevant_sources": [
+        "parental_leave.md",
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "6. Annual leave interaction",
+          "exact_text": "Unused annual leave remains governed by **Annual Leave Policy HR-LEV-0101**, including its carry-forward rules."
+        }
+      ]
+    },
+    {
+      "id": "q044",
+      "category": "parental_leave",
+      "difficulty": "medium",
+      "challenge_types": [
+        "part_time"
+      ],
+      "question": "How are company-paid transition days handled for part-time employees?",
+      "expected_answer": "They are provided on a pro-rata basis.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "Part-time employees receive transition days on a pro-rata basis."
+        }
+      ]
+    },
+    {
+      "id": "q045",
+      "category": "parental_leave",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_reference",
+        "paraphrase"
+      ],
+      "question": "A returning parent asks for temporary home-working arrangements. Which other policy must be considered?",
+      "expected_answer": "Remote Work Policy HR-RMT-0204.",
+      "relevant_sources": [
+        "parental_leave.md",
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- A returning employee requesting temporary remote work must also consider HR-RMT-0204."
+        },
+        {
+          "source": "parental_leave.md",
+          "section": "5. Remote work after parental leave",
+          "exact_text": "Any remote-work arrangement must follow **Remote Work Policy HR-RMT-0204** unless a specific temporary exception is approved."
+        }
+      ]
+    },
+    {
+      "id": "q046",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "location_rule"
+      ],
+      "question": "What is the normal weekly remote-work maximum for someone contractually based in Germany?",
+      "expected_answer": "Up to 3 days per week.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q047",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "location_rule"
+      ],
+      "question": "What is the normal weekly remote-work maximum for someone contractually based in Pakistan?",
+      "expected_answer": "Up to 2 days per week.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Pakistan",
+          "exact_text": "Employees contracted in Pakistan may normally work remotely for up to **2 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q048",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "office_attendance"
+      ],
+      "question": "Compare the normal office-attendance expectations in Germany and Pakistan.",
+      "expected_answer": "Germany: at least 2 office days per week; Pakistan: at least 3.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees are normally expected to work from a FakeCompanyABC office at least **2 days per week**."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Pakistan",
+          "exact_text": "Employees are normally expected to work from a FakeCompanyABC office at least **3 days per week**."
+        }
+      ]
+    },
+    {
+      "id": "q049",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "remote_allowance"
+      ],
+      "question": "How does the standard remote-work allowance differ between Germany and Pakistan?",
+      "expected_answer": "Germany normally allows up to 3 remote days per week; Pakistan up to 2.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Pakistan",
+          "exact_text": "Employees contracted in Pakistan may normally work remotely for up to **2 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q050",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_border",
+        "negative"
+      ],
+      "question": "Does having unused normal remote-work days automatically let a Germany-based employee work from Spain?",
+      "expected_answer": "No. Cross-border remote work is not automatically covered by the weekly allowance and requires prior written approval from both HR and the manager.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Working remotely from a country other than the employee's contractual work location is **not automatically covered** by the normal weekly remote-work allowance."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Cross-border remote work requires prior written approval from **both HR and the employee's manager** because tax, immigration, payroll, information-security, and employment-law requirements may apply."
+        }
+      ]
+    },
+    {
+      "id": "q051",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "approval",
+        "cross_border"
+      ],
+      "question": "Whose prior written approval is required for cross-border remote work?",
+      "expected_answer": "Both HR and the employee’s manager.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Cross-border remote work requires prior written approval from **both HR and the employee's manager** because tax, immigration, payroll, information-security, and employment-law requirements may apply."
+        }
+      ]
+    },
+    {
+      "id": "q052",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "negative",
+        "cross_border"
+      ],
+      "question": "Is manager approval by itself enough for an employee to work remotely from another country?",
+      "expected_answer": "No.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Manager approval alone is not sufficient for cross-border remote work."
+        }
+      ]
+    },
+    {
+      "id": "q053",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "cross_border"
+      ],
+      "question": "A Germany-based employee wants to work from Spain for one week and still has unused remote days. What approvals are needed?",
+      "expected_answer": "HR and manager approval are needed.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "5. Examples",
+          "exact_text": "- A Germany-based employee who wants to work from Spain for one week needs HR and manager approval even if the employee has unused remote-work days."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Cross-border remote work requires prior written approval from **both HR and the employee's manager** because tax, immigration, payroll, information-security, and employment-law requirements may apply."
+        }
+      ]
+    },
+    {
+      "id": "q054",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "security"
+      ],
+      "question": "What type of device should employees use for company work while remote?",
+      "expected_answer": "A company-managed device.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "3. Security requirements",
+          "exact_text": "- use the company-managed device for company work;"
+        }
+      ]
+    },
+    {
+      "id": "q055",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "security"
+      ],
+      "question": "What network-access requirement applies when the approved VPN is required?",
+      "expected_answer": "The employee must connect through the approved VPN.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "3. Security requirements",
+          "exact_text": "- connect through the approved VPN when required;"
+        }
+      ]
+    },
+    {
+      "id": "q056",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "security",
+        "incident"
+      ],
+      "question": "What should a remote employee do if a company device is lost or stolen?",
+      "expected_answer": "Report the loss or theft immediately.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "3. Security requirements",
+          "exact_text": "- report loss or theft of company devices immediately."
+        }
+      ]
+    },
+    {
+      "id": "q057",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "temporary_exception",
+        "scope"
+      ],
+      "question": "How long can a department director temporarily waive the weekly office-attendance requirement?",
+      "expected_answer": "Up to 4 consecutive weeks.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "4. Temporary exceptions",
+          "exact_text": "A department director may approve a temporary exception to the weekly office-attendance requirement for up to **4 consecutive weeks**."
+        }
+      ]
+    },
+    {
+      "id": "q058",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "exception",
+        "cross_border",
+        "negative"
+      ],
+      "question": "If a director grants a four-week office-attendance exception, does that automatically authorize working from another country?",
+      "expected_answer": "No.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "4. Temporary exceptions",
+          "exact_text": "A department director may approve a temporary exception to the weekly office-attendance requirement for up to **4 consecutive weeks**."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "4. Temporary exceptions",
+          "exact_text": "An exception to office attendance does **not** automatically authorize cross-border remote work."
+        }
+      ]
+    },
+    {
+      "id": "q059",
+      "category": "remote_work",
+      "difficulty": "medium",
+      "challenge_types": [
+        "scenario"
+      ],
+      "question": "Can a Germany-based employee work from home in Germany three days in a week under the normal rule?",
+      "expected_answer": "Potentially yes, if the manager approves and team scheduling allows it.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "5. Examples",
+          "exact_text": "- A Germany-based employee working from home in Germany 3 days in one week may be allowed if the manager approves."
+        }
+      ]
+    },
+    {
+      "id": "q060",
+      "category": "remote_work",
+      "difficulty": "hard",
+      "challenge_types": [
+        "multi_evidence",
+        "security"
+      ],
+      "question": "Name two distinct information-security responsibilities for remote employees: one about access by other people and one about device incidents.",
+      "expected_answer": "They must prevent unauthorized persons from accessing company information and report loss or theft of company devices immediately.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "3. Security requirements",
+          "exact_text": "- prevent unauthorized persons from accessing company information;"
+        },
+        {
+          "source": "remote_work.md",
+          "section": "3. Security requirements",
+          "exact_text": "- report loss or theft of company devices immediately."
+        }
+      ]
+    },
+    {
+      "id": "q061",
+      "category": "travel",
+      "difficulty": "medium",
+      "challenge_types": [
+        "approval"
+      ],
+      "question": "When must manager approval for ordinary business travel be obtained relative to booking?",
+      "expected_answer": "Before booking.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "1. Approval",
+          "exact_text": "All business travel must be approved by the employee's manager **before booking**."
+        }
+      ]
+    },
+    {
+      "id": "q062",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "international",
+        "multi_condition"
+      ],
+      "question": "What additional pre-booking requirement applies specifically to international business travel?",
+      "expected_answer": "The cost center must also be identified before booking.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "1. Approval",
+          "exact_text": "International travel additionally requires the cost center to be identified before booking."
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "1. Approval",
+          "exact_text": "All business travel must be approved by the employee's manager **before booking**."
+        }
+      ]
+    },
+    {
+      "id": "q063",
+      "category": "travel",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold_boundary",
+        "air_travel"
+      ],
+      "question": "What cabin should normally be booked for a flight scheduled to last exactly 6 hours?",
+      "expected_answer": "Economy class.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "2. Air travel",
+          "exact_text": "For flights with a scheduled duration of **6 hours or less**, employees should book economy class."
+        }
+      ]
+    },
+    {
+      "id": "q064",
+      "category": "travel",
+      "difficulty": "medium",
+      "challenge_types": [
+        "threshold",
+        "air_travel"
+      ],
+      "question": "A flight is scheduled for 6 hours and 30 minutes. What cabin may be booked with manager approval?",
+      "expected_answer": "Premium economy.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "2. Air travel",
+          "exact_text": "For flights with a scheduled duration of **more than 6 hours**, premium economy may be booked with manager approval."
+        }
+      ]
+    },
+    {
+      "id": "q065",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "approval_level",
+        "air_travel"
+      ],
+      "question": "What approvals or justification are required for business class?",
+      "expected_answer": "Director-level approval and a documented business justification.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "2. Air travel",
+          "exact_text": "Business class requires director-level approval and a documented business justification."
+        }
+      ]
+    },
+    {
+      "id": "q066",
+      "category": "travel_current",
+      "difficulty": "medium",
+      "challenge_types": [
+        "current_vs_historical",
+        "location"
+      ],
+      "question": "What is Germany’s standard nightly hotel ceiling for travel taking place in 2026?",
+      "expected_answer": "EUR 160 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "The following nightly hotel limits apply from **1 January 2026**:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        }
+      ]
+    },
+    {
+      "id": "q067",
+      "category": "travel_current",
+      "difficulty": "medium",
+      "challenge_types": [
+        "location"
+      ],
+      "question": "What is the 2026 standard nightly hotel ceiling in Spain?",
+      "expected_answer": "EUR 150 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Spain | EUR 150 |"
+        }
+      ]
+    },
+    {
+      "id": "q068",
+      "category": "travel_current",
+      "difficulty": "medium",
+      "challenge_types": [
+        "location",
+        "currency"
+      ],
+      "question": "What is the 2026 standard nightly hotel ceiling in Pakistan?",
+      "expected_answer": "PKR 32,000 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Pakistan | PKR 32,000 |"
+        }
+      ]
+    },
+    {
+      "id": "q069",
+      "category": "travel_historical",
+      "difficulty": "hard",
+      "challenge_types": [
+        "current_vs_historical",
+        "paraphrase"
+      ],
+      "question": "Before the current travel-policy revision, what nightly room-rate ceiling applied in Germany during 2025?",
+      "expected_answer": "EUR 130 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "Under **version 3.2**, effective from 1 January 2025 through 31 December 2025, the hotel limits were:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Germany | EUR 130 |"
+        }
+      ]
+    },
+    {
+      "id": "q070",
+      "category": "travel_historical",
+      "difficulty": "hard",
+      "challenge_types": [
+        "current_vs_historical",
+        "location"
+      ],
+      "question": "What was Spain’s standard hotel ceiling under version 3.2 in 2025?",
+      "expected_answer": "EUR 125 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "Under **version 3.2**, effective from 1 January 2025 through 31 December 2025, the hotel limits were:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Spain | EUR 125 |"
+        }
+      ]
+    },
+    {
+      "id": "q071",
+      "category": "travel_historical",
+      "difficulty": "hard",
+      "challenge_types": [
+        "current_vs_historical",
+        "location"
+      ],
+      "question": "What was Belgium’s standard hotel ceiling during 2025?",
+      "expected_answer": "EUR 145 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "Under **version 3.2**, effective from 1 January 2025 through 31 December 2025, the hotel limits were:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Belgium | EUR 145 |"
+        }
+      ]
+    },
+    {
+      "id": "q072",
+      "category": "travel_historical",
+      "difficulty": "hard",
+      "challenge_types": [
+        "current_vs_historical",
+        "location",
+        "currency"
+      ],
+      "question": "What was Pakistan’s nightly hotel ceiling under the 2025 version?",
+      "expected_answer": "PKR 26,000 per night.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "Under **version 3.2**, effective from 1 January 2025 through 31 December 2025, the hotel limits were:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Pakistan | PKR 26,000 |"
+        }
+      ]
+    },
+    {
+      "id": "q073",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "temporal"
+      ],
+      "question": "By how much did Germany’s standard hotel limit increase from 2025 to 2026?",
+      "expected_answer": "It increased by EUR 30, from EUR 130 to EUR 160.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Germany | EUR 130 |"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        }
+      ]
+    },
+    {
+      "id": "q074",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "temporal"
+      ],
+      "question": "By how much did Spain’s standard hotel limit increase from 2025 to 2026?",
+      "expected_answer": "It increased by EUR 25, from EUR 125 to EUR 150.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Spain | EUR 125 |"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Spain | EUR 150 |"
+        }
+      ]
+    },
+    {
+      "id": "q075",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "temporal"
+      ],
+      "question": "By how much did Belgium’s standard hotel limit increase from 2025 to 2026?",
+      "expected_answer": "It increased by EUR 25, from EUR 145 to EUR 170.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Belgium | EUR 145 |"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Belgium | EUR 170 |"
+        }
+      ]
+    },
+    {
+      "id": "q076",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "comparison",
+        "temporal",
+        "currency"
+      ],
+      "question": "How did Pakistan’s standard hotel ceiling change from 2025 to 2026?",
+      "expected_answer": "It increased from PKR 26,000 to PKR 32,000, a rise of PKR 6,000.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Pakistan | PKR 26,000 |"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Pakistan | PKR 32,000 |"
+        }
+      ]
+    },
+    {
+      "id": "q077",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "policy_scope",
+        "temporal"
+      ],
+      "question": "Why are the 2025 hotel values still present in the current travel document?",
+      "expected_answer": "They are retained only for audit and historical-reference purposes and are not the current limits.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "These values are retained here only for audit and historical-reference purposes."
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "The following nightly hotel limits apply from **1 January 2026**:"
+        }
+      ]
+    },
+    {
+      "id": "q078",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "hotel_components"
+      ],
+      "question": "Does the standard hotel limit include mandatory hotel taxes, and how is separately charged breakfast treated?",
+      "expected_answer": "Mandatory hotel taxes are included; separately charged breakfast is excluded from the room-rate limit where breakfast is reimbursable under the expense policy.",
+      "relevant_sources": [
+        "travel_policy.md",
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "The limit applies to the room rate including mandatory hotel taxes, but excluding separately charged breakfast where breakfast is reimbursable under the expense policy."
+        }
+      ]
+    },
+    {
+      "id": "q079",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "exception",
+        "approval"
+      ],
+      "question": "What must happen before booking if a hotel rate exceeds the standard limit?",
+      "expected_answer": "The employee’s manager and the relevant cost-center owner must approve the higher rate before booking.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "A higher rate may be reimbursed only if approved **before booking** by the employee's manager and the relevant cost-center owner."
+        }
+      ]
+    },
+    {
+      "id": "q080",
+      "category": "travel",
+      "difficulty": "medium",
+      "challenge_types": [
+        "rail",
+        "threshold"
+      ],
+      "question": "What class should normally be used for a rail journey lasting 2 hours and 45 minutes?",
+      "expected_answer": "Standard class.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "5. Rail travel",
+          "exact_text": "Standard class should normally be used for rail journeys under **3 hours**."
+        }
+      ]
+    },
+    {
+      "id": "q081",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "rail",
+        "threshold",
+        "approval"
+      ],
+      "question": "A rail journey lasts 3 hours. Under what conditions may first class be used?",
+      "expected_answer": "If the fare is reasonable and manager approval has been obtained.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "5. Rail travel",
+          "exact_text": "First class may be used for rail journeys of **3 hours or more** if the fare is reasonable and manager approval has been obtained."
+        }
+      ]
+    },
+    {
+      "id": "q082",
+      "category": "travel",
+      "difficulty": "medium",
+      "challenge_types": [
+        "booking_channel"
+      ],
+      "question": "What booking channel should employees normally use when it is available for the destination?",
+      "expected_answer": "The approved corporate travel provider.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "6. Booking channels",
+          "exact_text": "Employees should use the approved corporate travel provider when it is available for the destination."
+        }
+      ]
+    },
+    {
+      "id": "q083",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "booking_channel",
+        "expense_claim"
+      ],
+      "question": "What must an employee add when a booking is made outside the approved travel channel?",
+      "expected_answer": "A short justification when the expense claim is submitted.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "6. Booking channels",
+          "exact_text": "Bookings made outside the approved channel must include a short justification when the expense claim is submitted."
+        }
+      ]
+    },
+    {
+      "id": "q084",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "identifier",
+        "alias"
+      ],
+      "question": "Do “TRV-0173” and “travel policy 0173” point to different documents?",
+      "expected_answer": "No. Both refer to the Business Travel Policy HR-TRV-0173.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "7. Exact identifier note",
+          "exact_text": "This policy is identified as **HR-TRV-0173**. Questions referring to \"TRV-0173\", \"HR-TRV-0173\", or \"travel policy 0173\" refer to this policy."
+        }
+      ]
+    },
+    {
+      "id": "q085",
+      "category": "travel",
+      "difficulty": "hard",
+      "challenge_types": [
+        "scenario",
+        "current_limit"
+      ],
+      "question": "A Spain hotel costs EUR 158 per night in 2026. Is it inside the standard limit, and if not, what is required?",
+      "expected_answer": "No. The standard limit is EUR 150, so advance approval is required.",
+      "relevant_sources": [
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "8. Examples",
+          "exact_text": "- A Spain hotel costing EUR 158 per night in 2026 requires advance approval because the standard limit is EUR 150."
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "A higher rate may be reimbursed only if approved **before booking** by the employee's manager and the relevant cost-center owner."
+        }
+      ]
+    },
+    {
+      "id": "q086",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "hotel",
+        "expense"
+      ],
+      "question": "An employee asks the expense team for the 2026 Germany hotel ceiling. Which policy supplies the limit, and what is the amount?",
+      "expected_answer": "The Business Travel Policy HR-TRV-0173 supplies the limit, which is EUR 160 per night.",
+      "relevant_sources": [
+        "expense_policy.md",
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        }
+      ]
+    },
+    {
+      "id": "q087",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "meal_vs_hotel",
+        "misleading_terms"
+      ],
+      "question": "A business traveler in Germany sees EUR 35 in the expense policy and EUR 160 in the travel policy. Which number applies to a hotel room and which to a meal?",
+      "expected_answer": "EUR 160 is the hotel room limit; EUR 35 is the standard maximum reimbursable meal expense per person.",
+      "relevant_sources": [
+        "travel_policy.md",
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Germany | EUR 35 |"
+        }
+      ]
+    },
+    {
+      "id": "q088",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "parental_remote"
+      ],
+      "question": "After returning from parental leave, a Germany-based employee wants to work remotely at the normal maximum. Which policy governs the arrangement and what is that maximum?",
+      "expected_answer": "Remote Work Policy HR-RMT-0204 governs it, and the normal Germany maximum is 3 remote days per week.",
+      "relevant_sources": [
+        "parental_leave.md",
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "5. Remote work after parental leave",
+          "exact_text": "Any remote-work arrangement must follow **Remote Work Policy HR-RMT-0204** unless a specific temporary exception is approved."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q089",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "parental_annual"
+      ],
+      "question": "A returning parent has unused annual leave. Which policy controls those unused days, and what is the normal carry-forward cap?",
+      "expected_answer": "Annual Leave Policy HR-LEV-0101 controls them, and the normal carry-forward cap is 5 days.",
+      "relevant_sources": [
+        "parental_leave.md",
+        "annual_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "6. Annual leave interaction",
+          "exact_text": "Unused annual leave remains governed by **Annual Leave Policy HR-LEV-0101**, including its carry-forward rules."
+        },
+        {
+          "source": "annual_leave.md",
+          "section": "3. Carry-forward",
+          "exact_text": "Employees may carry forward a maximum of **5 unused annual-leave days** into the following calendar year."
+        }
+      ]
+    },
+    {
+      "id": "q090",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "location_rule",
+        "cross_border"
+      ],
+      "question": "A Germany-contracted employee temporarily works from Pakistan. Does that temporary location change the employee’s annual-leave entitlement, and is cross-border remote work automatically covered by the normal weekly allowance?",
+      "expected_answer": "No on both points: the Germany annual-leave entitlement continues unless the contract changes, and cross-border remote work is not automatically covered by the normal weekly allowance.",
+      "relevant_sources": [
+        "annual_leave.md",
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "7. Examples",
+          "exact_text": "- A Germany-based employee temporarily working from Pakistan still follows the Germany annual-leave entitlement unless the employment contract is changed."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Working remotely from a country other than the employee's contractual work location is **not automatically covered** by the normal weekly remote-work allowance."
+        }
+      ]
+    },
+    {
+      "id": "q091",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "country_profile"
+      ],
+      "question": "For a full-time employee contractually based in Pakistan, state the standard annual-leave entitlement and normal weekly remote-work maximum.",
+      "expected_answer": "24 working days of annual leave per year and up to 2 remote days per week.",
+      "relevant_sources": [
+        "annual_leave.md",
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Pakistan",
+          "exact_text": "Full-time employees whose contractual work location is Pakistan receive **24 working days of paid annual leave per calendar year**."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Pakistan",
+          "exact_text": "Employees contracted in Pakistan may normally work remotely for up to **2 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q092",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "country_profile"
+      ],
+      "question": "For a full-time employee contractually based in Germany, state the standard annual-leave entitlement and normal weekly remote-work maximum.",
+      "expected_answer": "30 working days of annual leave per year and up to 3 remote days per week.",
+      "relevant_sources": [
+        "annual_leave.md",
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "annual_leave.md",
+          "section": "2. Annual leave entitlement / Germany",
+          "exact_text": "Full-time employees whose contractual work location is Germany receive **30 working days of paid annual leave per calendar year**."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "1. Standard remote-work allowance / Germany",
+          "exact_text": "Employees contracted in Germany may normally work remotely for up to **3 days per week**, subject to manager approval and team scheduling."
+        }
+      ]
+    },
+    {
+      "id": "q093",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "business_trip_process"
+      ],
+      "question": "A Germany employee is planning business travel and later filing expenses. Name one approval required before booking and the normal deadline for filing the expense claim.",
+      "expected_answer": "Manager approval is required before booking, and the expense claim should normally be submitted within 30 calendar days of the expense date.",
+      "relevant_sources": [
+        "travel_policy.md",
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "1. Approval",
+          "exact_text": "All business travel must be approved by the employee's manager **before booking**."
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "1. Submission deadline",
+          "exact_text": "Employees must normally submit business-expense claims within **30 calendar days** of the expense date."
+        }
+      ]
+    },
+    {
+      "id": "q094",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "hotel_exception",
+        "receipts"
+      ],
+      "question": "A Germany hotel costs more than the standard 2026 limit. What pre-booking approvals are needed, and which policy should the employee use to check the allowable hotel rate?",
+      "expected_answer": "The employee’s manager and relevant cost-center owner must approve the higher rate before booking, and the hotel limit should be checked in Business Travel Policy HR-TRV-0173.",
+      "relevant_sources": [
+        "travel_policy.md",
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "A higher rate may be reimbursed only if approved **before booking** by the employee's manager and the relevant cost-center owner."
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        }
+      ]
+    },
+    {
+      "id": "q095",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "parental_benefit",
+        "annual_leave"
+      ],
+      "question": "Do five company-paid transition days consume five days from annual leave?",
+      "expected_answer": "No. Transition days are separate and are not deducted from the annual-leave balance.",
+      "relevant_sources": [
+        "parental_leave.md"
+      ],
+      "evidence": [
+        {
+          "source": "parental_leave.md",
+          "section": "3. Company-paid transition days",
+          "exact_text": "In addition to any statutory entitlement, eligible full-time employees who have completed at least **12 months of continuous service** may receive up to **5 company-paid transition days** associated with the birth or adoption of a child."
+        },
+        {
+          "source": "parental_leave.md",
+          "section": "6. Annual leave interaction",
+          "exact_text": "Company-paid transition days are not deducted from the employee's annual-leave balance."
+        }
+      ]
+    },
+    {
+      "id": "q096",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "remote_exception",
+        "cross_border"
+      ],
+      "question": "A director waives office attendance for four weeks. Can the employee use that permission to work from Spain without HR approval?",
+      "expected_answer": "No. The office-attendance exception does not automatically authorize cross-border remote work, which still requires prior written approval from HR and the manager.",
+      "relevant_sources": [
+        "remote_work.md"
+      ],
+      "evidence": [
+        {
+          "source": "remote_work.md",
+          "section": "4. Temporary exceptions",
+          "exact_text": "A department director may approve a temporary exception to the weekly office-attendance requirement for up to **4 consecutive weeks**."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "4. Temporary exceptions",
+          "exact_text": "An exception to office attendance does **not** automatically authorize cross-border remote work."
+        },
+        {
+          "source": "remote_work.md",
+          "section": "2. Working from another country",
+          "exact_text": "Cross-border remote work requires prior written approval from **both HR and the employee's manager** because tax, immigration, payroll, information-security, and employment-law requirements may apply."
+        }
+      ]
+    },
+    {
+      "id": "q097",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "current_vs_historical",
+        "policy_reference"
+      ],
+      "question": "An expense claim concerns a Germany hotel stay in 2025. The expense policy points to the travel policy. Which historical limit in that travel policy is relevant?",
+      "expected_answer": "EUR 130 per night under version 3.2 for 2025.",
+      "relevant_sources": [
+        "expense_policy.md",
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "Under **version 3.2**, effective from 1 January 2025 through 31 December 2025, the hotel limits were:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "4. Historical limits — do not use for travel from 2026 onward",
+          "exact_text": "| Germany | EUR 130 |"
+        }
+      ]
+    },
+    {
+      "id": "q098",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "current_vs_historical",
+        "policy_reference"
+      ],
+      "question": "An expense claim concerns a Germany hotel stay in 2026. Which referenced policy and current limit should be used?",
+      "expected_answer": "Business Travel Policy HR-TRV-0173 and the current Germany limit of EUR 160 per night.",
+      "relevant_sources": [
+        "expense_policy.md",
+        "travel_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "expense_policy.md",
+          "section": "4. Hotels",
+          "exact_text": "For hotel limits, employees must use the current **Business Travel Policy, HR-TRV-0173**."
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "The following nightly hotel limits apply from **1 January 2026**:"
+        },
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Germany | EUR 160 |"
+        }
+      ]
+    },
+    {
+      "id": "q099",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "multi_evidence",
+        "travel_expense"
+      ],
+      "question": "For a 2026 business trip to Belgium, what are the standard hotel-room ceiling and standard meal ceiling?",
+      "expected_answer": "EUR 170 per night for the hotel room and EUR 40 per meal.",
+      "relevant_sources": [
+        "travel_policy.md",
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Belgium | EUR 170 |"
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Belgium | EUR 40 |"
+        }
+      ]
+    },
+    {
+      "id": "q100",
+      "category": "cross_policy",
+      "difficulty": "hard",
+      "challenge_types": [
+        "cross_document",
+        "multi_evidence",
+        "travel_expense"
+      ],
+      "question": "For a 2026 business trip to Spain, what are the standard hotel-room ceiling and standard meal ceiling?",
+      "expected_answer": "EUR 150 per night for the hotel room and EUR 35 per meal.",
+      "relevant_sources": [
+        "travel_policy.md",
+        "expense_policy.md"
+      ],
+      "evidence": [
+        {
+          "source": "travel_policy.md",
+          "section": "3. Hotel limits — current policy",
+          "exact_text": "| Spain | EUR 150 |"
+        },
+        {
+          "source": "expense_policy.md",
+          "section": "3. Meals during business travel",
+          "exact_text": "| Spain | EUR 35 |"
+        }
+      ]
+    }
+  ]
+}
