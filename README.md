@@ -1,46 +1,100 @@
 # FakeCompanyABC RAG
 
-A small local Retrieval-Augmented Generation (RAG) project built for hands-on practice and to refresh practical RAG concepts.
+A fully local Retrieval-Augmented Generation (RAG) practice project built around fictional HR policies. I used the project to revisit RAG from first principles, measure retrieval instead of only looking at final answers, progressively improve the pipeline, and then evaluate the end-to-end system with both a local LLM judge and a stronger secondary judge.. I also wanted to keep the project completely free, so I deliberately avoided paid APIs and stayed with local, open-source tools and models throughout.
 
-All company names, HR policies, documents, and data used in this repository are **completely fictional** and created only for learning and experimentation.
+All company names, policies, questions, answers, and data in this repository are **completely fictional** and exist only for learning and experimentation.
 
-## Project Status - 23 August 2026
+## Project Status - 25 August 2026
 
-At this point, I have completed the **retrieval side** of the first version of this project and benchmarked several retrieval designs before moving to LLM generation.
+The **classical RAG stage is complete** for this repository.
 
-The current local stack is:
+The project now includes:
 
-- **Ollama** as the local model runtime
-- **nomic-embed-text** for query/document embeddings
-- **ChromaDB** as the persistent vector store
-- **TF-IDF** as a lightweight policy-file prefilter
-- **cross-encoder/ms-marco-MiniLM-L6-v2** as an optional chunk reranker
-- **Qwen3 1.7B** as the local generation model for the next stage
-- **LangChain** for model/document interfaces
-- **CPU-only Ubuntu machine**, so latency and model size matter
+- dense vector retrieval with `nomic-embed-text` + ChromaDB
+- deterministic retrieval evaluation with exact source evidence
+- chunking experiments
+- manual retrieval-failure analysis
+- TF-IDF policy-file routing before dense search
+- a harder 100-question retrieval benchmark
+- optional cross-encoder reranking
+- grounded answer generation with a deliberately small `qwen3:0.6b` model
+- end-to-end generation evaluation with RAGAS + a local Qwen judge
+- a second evaluation of the exact same saved answers using GPT-5.6 Sol
+- comparison of retrieval-pipeline effects and judge disagreement
+- manual validation on 5 questions, where I compared both judges against my own faithfulness and factual-correctness judgments
 
-The indexed corpus currently contains the fictional FakeCompanyABC HR policies. With the selected chunking configuration of **700 characters with 120 overlap**, the current Chroma index contains **22 chunks**.
+The next stage of the repository will start at **08** and add **GraphRAG / Neo4j** using the same fictional policies and benchmark questions so that graph-based retrieval can be compared with the existing RAG approaches.
 
-The retrieval work progressed in stages:
+---
 
-1. Started with simple dense retrieval using Nomic embeddings and Chroma.
-2. Built an initial 20-question ground truth and added Hit@K, Recall@K, Precision@K and MRR evaluation.
-3. Compared multiple chunk sizes and selected 700/120.
-4. Manually inspected retrieval failures instead of immediately adding more models.
-5. Found that the main problem was often **wrong-policy chunks entering the Top-3**, even when the required evidence was already retrieved.
-6. Added a TF-IDF policy-file prefilter to reduce the search space before dense retrieval.
-7. Added **Source Precision@3** because exact-evidence Precision@3 alone could not show the improvement in policy-level cleanliness.
-8. Created a harder **100-question ground-truth benchmark with the help of ChatGPT** using the fictional policy files as the source.
-9. Added a cross-encoder reranker and compared three complete retrieval systems on the same 100 questions.
-10. Measured both retrieval quality and CPU latency before deciding which design is practically useful.
+## Final Classical RAG Architecture
 
-The harder 100-question benchmark contains **36 medium and 64 hard questions**, including **51 multi-evidence** and **19 multi-source** questions. Every stored `exact_text` evidence string was programmatically checked to exist verbatim in its named Markdown policy file. The benchmark is source based rather than chunk-ID based, so it is not tied to one specific chunking or retrieval configuration.
+The practical pipeline selected after the retrieval experiments is:
 
-### Current Main Benchmark
+```text
+User question
+    -> TF-IDF policy-file routing
+    -> nomic-embed-text query embedding
+    -> ChromaDB dense retrieval inside candidate policy file(s)
+    -> Top-3 policy chunks
+    -> qwen3:0.6b grounded generation
+    -> final answer
+```
 
-All three systems are evaluated at **Top-3**. The reranker receives **Top-5 dense candidates** and chooses the final Top-3.
+A cross-encoder reranker was also benchmarked:
 
-| Metric | Dense Only | Dense + TF-IDF | Dense + TF-IDF + Reranker |
+```text
+TF-IDF routing
+    -> dense Top-5
+    -> cross-encoder/ms-marco-MiniLM-L6-v2
+    -> final Top-3
+```
+
+It produced the best retrieval ranking metrics, but its CPU cost was much higher. For the end-to-end generation experiments I therefore compared **dense-only RAG** against the more practical **TF-IDF + dense RAG** pipeline without the reranker.
+
+### Main Local Stack
+
+| Component | Choice |
+|---|---|
+| Runtime | Ollama |
+| Embeddings | `nomic-embed-text` |
+| Vector store | ChromaDB |
+| Policy routing | TF-IDF (`scikit-learn`) |
+| Optional reranker | `cross-encoder/ms-marco-MiniLM-L6-v2` |
+| Final generation model | `qwen3:0.6b` |
+| Local generation judge | `qwen2.5:1.5b-instruct` through RAGAS |
+| Secondary external judge | `GPT-5.6 Sol` |
+| Manual judge check | 5-question human spot-check of faithfulness and factual correctness |
+| Main orchestration/interfaces | LangChain |
+| Development machine | Ubuntu 22.04.5 LTS, CPU-only (Intel 13th Gen Intel® Core™ i5-13420H, 16GB RAM) |
+
+I intentionally used a very small **0.6B** generator. I originally started with Qwen3 1.7B, but when I later introduced a larger local judge model, the evaluation became too slow and started timing out on my CPU-only machine. I therefore reduced the generator size and adjusted the model selection to keep the full evaluation pipeline practical. At the same time, this gave me an additional experiment: I wanted to see how well the RAG application could perform with a much smaller language model.
+
+---
+
+## Final Results at a Glance
+
+### 1. Retrieval Benchmark - 100 Questions
+
+The final retrieval benchmark uses `retrieval_ground_truth_100_hard.json`: **100 questions**, including **64 hard**, **36 medium**, **51 multi-evidence**, and **19 multi-source** questions.
+
+Question Difficulty
+
+The difficulty labels are specific to this benchmark and are based mainly on how much reasoning and evidence retrieval a question requires. They are not universal definitions of RAG difficulty.
+
+* Easy — A direct lookup from a single policy, usually requiring one piece of evidence and using wording close to the source text.
+**Example**: “How many annual leave days does a full-time employee in Germany receive?”
+The answer can be found directly in the annual leave policy.
+* Medium — Usually still answerable from one main policy, but the question may be paraphrased, scenario-based, involve a threshold, location rule, date, exception, or require combining two pieces of evidence.
+**Example**: “An employee has German nationality but their contractual work location is Pakistan. How many annual leave days do they receive?”
+The system must understand that the policy uses contractual location, not nationality, and then retrieve the Pakistan leave entitlement.
+* Hard — Requires more reasoning, multiple evidence items, cross-policy relationships, temporal distinctions, negative conditions, or distinguishing between very similar rules. Some questions require evidence from more than one policy.
+**Example**: “After returning from parental leave, which policy governs remote work and how many remote days per week may a Germany-based employee normally have?”
+The system must connect the parental leave policy with the remote work policy and retrieve the applicable Germany rule.
+
+All systems are evaluated at final **Top-3**. The reranker receives Top-5 candidates and reorders them before Top-3 evaluation.
+
+| Metric | Dense Only | TF-IDF + Dense | TF-IDF + Dense + Reranker |
 |---|---:|---:|---:|
 | Hit@1 | 0.730 | 0.790 | **0.840** |
 | Hit@3 | 0.990 | **1.000** | **1.000** |
@@ -49,33 +103,108 @@ All three systems are evaluated at **Top-3**. The reranker receives **Top-5 dens
 | Source Precision@3 | 0.847 | 0.950 | **0.963** |
 | MRR@3 | 0.850 | 0.888 | **0.917** |
 
-On this CPU-only setup, the average timings were:
+Final measured CPU timing:
 
 | Stage | Average time |
 |---|---:|
-| Nomic query embedding | 69.69 ms |
-| Dense retrieval after embedding | 1.55 ms |
-| TF-IDF + dense after embedding | 2.89 ms |
-| TF-IDF + dense + reranker after embedding | 403.14 ms |
+| Nomic query embedding | 64.32 ms |
+| Dense retrieval after embedding | 1.76 ms |
+| TF-IDF + dense after embedding | 2.97 ms |
+| TF-IDF + dense + reranker after embedding | 401.08 ms |
 
-My current conclusion is that **TF-IDF + dense retrieval gives the best accuracy/speed trade-off** for this small local corpus. The reranker gives the best ranking numbers, especially Hit@1 and MRR, but adds a large CPU cost. I therefore consider the reranker useful as an optional accuracy-focused stage rather than something that must always be enabled.
+The main retrieval conclusion is:
 
-The current retrieval flow is:
+> **TF-IDF + dense gives the best accuracy/speed trade-off:** The reranker gives the best ranking quality, but the additional latency is large enough that I treat it as an optional accuracy-focused stage.
+
+### 2. End-to-End Generation Benchmark - 100 Questions
+
+For generation I used the same 100 questions and the same Top-3 context size.
+
+The generator was fixed to:
 
 ```text
-Question
-  -> TF-IDF policy-file prefilter
-  -> Nomic query embedding
-  -> Chroma dense retrieval
-  -> optional cross-encoder reranking
-  -> final Top-3 context
+qwen3:0.6b
 ```
 
-**The complete progression of the project, each retrieval evaluation, the reasoning behind every change, and the intermediate results are documented below.**
+The main local evaluator used:
 
-The next major stage is **generation**: pass the retrieved context to Qwen3 1.7B, constrain the model to the retrieved evidence, and then evaluate generation separately from retrieval.
+```text
+RAGAS
+  + qwen2.5:1.5b-instruct as LLM judge
+  + nomic-embed-text for semantic answer similarity
+```
+
+I then evaluated the **same saved generated answers** with GPT-5.6 Sol as a second judge. GPT-5.6 Sol did not regenerate the answers; it only evaluated the already saved outputs.
+
+#### Final Four-Case Comparison
+
+| Pipeline | Judge | Faithfulness | Factual Correctness | Semantic Similarity | Answer Relevancy |
+|---|---|---:|---:|---:|---:|
+| Dense | RAGAS + Qwen2.5 | 0.801 | 0.652 | 0.779 | - |
+| TF-IDF + Dense | RAGAS + Qwen2.5 | 0.754 | 0.668 | 0.778 | - |
+| Dense | GPT-5.6 Sol | 0.831 | 0.753 | - | 0.912 |
+| TF-IDF + Dense | GPT-5.6 Sol | **0.848** | **0.775** | - | **0.921** |
+
+
+The retrieval pipeline changed retrieved contexts for **36/100 questions** and changed the generated answer for **32/100 questions**. TF-IDF routing selected candidate policy files for **92 questions**, used ambiguous-signal full-corpus fallback for **7**, and weak-signal full-corpus fallback for **1**. All these results commparison can be done with 07.1_compare_four_generation_evaluations.py present in ./evaluation/results
+
+The paired improvements are modest and the two judges differ in their assessments. I therefore treat these generation numbers as **diagnostic evidence**, not as an absolute measure of truth. The judge-comparison experiment is useful because it shows why an LLM-as-a-judge should itself be checked rather than directly trusted. I later checked few questions where there was a complete disagreement in both judge LLMs.
+
+
+### Manual Judge Validation - 5 Questions
+
+The local and external judges do **not** agree perfectly. I manually checked **5 representative questions**.
+
+For each of those 5 questions, I looked at:
+
+- the user question
+- the retrieved context
+- the generated answer
+- the reference answer
+- the **faithfulness** judgment
+- the **factual correctness** judgment
+
+I then compared my own manual judgment with the two automated judges:
+
+```text
+Local judge:
+qwen2.5:1.5b-instruct
+used through RAGAS
+
+Secondary judge:
+GPT-5.6 Sol
+```
+
+In this small manual spot-check, **GPT-5.6 Sol aligned much better with my own judgments than `qwen2.5:1.5b-instruct`**.
+
+This does not prove that GPT-5.6 Sol is always a perfect judge. The manual sample is small, only 5 questions. However, it gave me a practical reason to trust the stronger judge more for interpretation of the final generation results. Therefore, I would say **The quality of an LLM-as-a-judge matters. A small judge can itself become an evaluation bottleneck.**
 
 ---
+
+## What I Consider Finished
+
+At this point the normal RAG work in this repository covers the complete path:
+
+```text
+Dense baseline
+    -> deterministic retrieval ground truth
+    -> chunk-size evaluation
+    -> manual failure analysis
+    -> TF-IDF policy routing
+    -> harder 100-question benchmark
+    -> reranker comparison
+    -> grounded generation
+    -> local RAGAS evaluation
+    -> secondary stronger-judge evaluation
+    -> judge/pipeline comparison
+```
+
+The sections below keep the full progression and intermediate experiments.
+
+---
+
+# Detailed Project Progression
+
 
 ## Initial Setup
 
@@ -95,6 +224,9 @@ The first source files were:
 | `05.3_tdidf_retrieval.py` | Add the TF-IDF policy-file prefilter before dense retrieval. |
 | `05.4_tfidf_prefilter_evaluate_updated.py` | Evaluate the improved TF-IDF fallback/filtering logic. |
 | `05.5_benchmark_three_retrieval_systems.py` | Compare dense-only, TF-IDF + dense, and TF-IDF + dense + reranker on the 100-question benchmark. |
+| `06_generate_answer.py` | Interactive grounded RAG answer generation with the deliberately small `qwen3:0.6b` model. |
+| `07_evaluate_rag_ragas.py` | Run the 100-question dense-RAG generation baseline and evaluate it with a local RAGAS/Qwen judge. |
+| `07_evaluate_rag_tfidf_ragas.py` | Run the same 100-question generation benchmark with TF-IDF policy routing before dense retrieval. |
 
 The document embedding and query embedding use the Nomic retrieval prefixes:
 
@@ -236,7 +368,7 @@ The vectorizer uses:
 ```text
 lowercase = True
 stop_words = english
-ngram_range = (1, 2)
+ngram_range = (1, 2) - use both single words and two-word phrases as features
 max_df = 0.8
 ```
 
@@ -570,17 +702,17 @@ The query embedding is calculated once and reused across the three systems.
 
 | Stage | Average time |
 |---|---:|
-| Nomic query embedding | 69.69 ms |
-| Dense only after embedding | 1.55 ms |
-| TF-IDF + dense after embedding | 2.89 ms |
-| TF-IDF + dense + reranker after embedding | 403.14 ms |
+| Nomic query embedding | 64.32 ms |
+| Dense only after embedding | 1.76 ms |
+| TF-IDF + dense after embedding | 2.97 ms |
+| TF-IDF + dense + reranker after embedding | 401.08 ms |
 
 Approximate end-to-end retrieval time including the shared query embedding is therefore around:
 
 ```text
-Dense only               ~71 ms
-TF-IDF + dense           ~73 ms
-TF-IDF + dense + rerank ~473 ms
+Dense only               ~66 ms
+TF-IDF + dense           ~67 ms
+TF-IDF + dense + rerank ~465 ms
 ```
 
 The TF-IDF stage gives a large policy-routing improvement for almost no additional latency.
@@ -616,7 +748,7 @@ Question
 
 ---
 
-## Current Conclusion
+## Retrieval Conclusion
 
 The main lesson from the retrieval stage is that adding more RAG components is not automatically an improvement.
 
@@ -642,26 +774,226 @@ The final benchmark shows:
 
 At this point, I consider the retrieval side sufficiently benchmarked for the first version.
 
-## Next Step - Generation
+---
 
-The next stage is to pass the retrieved Top-3 context to **Qwen3 1.7B** and evaluate the generation stage separately.
+## Evaluation 10 - Grounded Generation with a Small Model
 
-The planned generation evaluation will focus on questions such as:
+After retrieval was sufficiently benchmarked, I added the generation stage.
 
-```text
-Was the correct evidence retrieved?
-Did the LLM use only that evidence?
-Did it answer the question correctly?
-Did it invent unsupported information?
-Did it include all required evidence for multi-evidence questions?
-Can it abstain when the retrieved context does not contain the answer?
-```
-
-This separation is important because a final wrong answer can come from two different failures:
+For the final classical-RAG experiments I deliberately used:
 
 ```text
-Wrong/missing context -> retrieval failure
-Correct context but wrong answer -> generation failure
+qwen3:0.6b
 ```
 
-The retrieval benchmark in this README is intended to make that distinction measurable before moving further into the generation side of RAG.
+This is a weak/small local model compared with common production LLMs. That was intentional for two reasons:
+
+1. the project runs on a CPU-only machine, so model size matters;
+2. a small generator makes retrieval and grounding quality more visible instead of allowing a large model to answer from its own background knowledge.
+
+The interactive generation flow in `06_generate_answer.py` is:
+
+```text
+Question
+  -> TF-IDF policy routing
+  -> Nomic query embedding
+  -> Chroma Top-3
+  -> build labelled context
+  -> qwen3:0.6b
+  -> grounded answer
+```
+
+The generation prompt restricts the assistant to the supplied policy context, asks it not to invent rules or numbers, asks it to abstain when context is insufficient, and avoids silently assuming missing conditions such as location, employment type, dates, or approval status.
+
+Following is the prompt: 
+"You are an HR assistant for the fictional company FakeCompanyABC.
+
+Answer the user's question using only the information in the provided context.
+
+Rules:
+- Do not use outside knowledge.
+- Do not invent company rules, numbers, conditions, dates, approvals, or exceptions.
+- If the context does not contain enough information to answer the question,
+  say: "I cannot answer this from the provided company policies."
+- Keep the answer concise but include all information needed to answer the question.
+- Do not assume conditions that the user did not provide,
+  such as employment type, location, approval status, or dates.
+- If the answer depends on a missing condition, explain the
+  condition rather than choosing one silently.
+- If the question is ambiguous and the context contains
+  multiple possible interpretations, say what needs to be
+  clarified."
+---
+
+## Evaluation 11 - Dense RAG Generation Baseline
+
+`07_evaluate_rag_ragas.py` runs the full 100-question benchmark using dense retrieval without TF-IDF routing.
+
+```text
+Question
+  -> Nomic embedding
+  -> Chroma full-corpus dense Top-3
+  -> qwen3:0.6b generation
+  -> evaluation
+```
+
+The local evaluator uses `qwen2.5:1.5b-instruct` through RAGAS.
+
+The evaluated local metrics are:
+
+- **Faithfulness** - whether generated claims are supported by retrieved context.
+- **Factual Correctness** - whether the generated answer matches the reference answer semantically/factually.
+- **Semantic Similarity** - Nomic embedding cosine similarity between generated and reference answers.
+
+The final dense baseline used in the four-way comparison produced:
+
+| Metric | Dense RAG |
+|---|---:|
+| Faithfulness | 0.801 |
+| Factual Correctness | 0.652 |
+| Semantic Similarity | 0.779 |
+
+The evaluator is designed conservatively for local CPU execution: individual RAGAS metrics are evaluated separately, parser failures can be retried, results are checkpointed after each question, and interrupted runs can be resumed.
+
+---
+
+## Evaluation 12 - TF-IDF + Dense End-to-End RAG
+
+`07_evaluate_rag_tfidf_ragas.py` repeats the generation benchmark with the selected policy-routing strategy in front of dense retrieval.
+
+```text
+Question
+  -> TF-IDF over whole policy files
+  -> candidate policy file(s)
+  -> Nomic query embedding
+  -> Chroma dense Top-3 restricted to candidates
+  -> qwen3:0.6b generation
+  -> local RAGAS evaluation
+```
+
+The routing configuration is the same idea used in the retrieval benchmark:
+
+```text
+MIN_LEXICAL_SCORE = 0.08
+MAX_AMBIGUOUS_SCORE_SPREAD = 0.05
+RELATIVE_SCORE_THRESHOLD = 0.55
+MAX_CANDIDATE_FILES = 2
+```
+
+Weak or ambiguous lexical signals fall back to full-corpus dense retrieval rather than forcing a potentially wrong policy filter.
+
+The 100-question generation run produced:
+
+| Metric | TF-IDF + Dense RAG |
+|---|---:|
+| Faithfulness - local Qwen judge | 0.754 |
+| Factual Correctness - local Qwen judge | 0.668 |
+| Semantic Similarity - Nomic | 0.778 |
+
+The important point is not that every metric increased. TF-IDF changed the retrieval context for only part of the benchmark, and the small local judge itself has limitations. This motivated a second-judge comparison.
+
+---
+
+## Evaluation 13 - Secondary GPT-5.6 Sol Judge
+
+I kept the generated answers fixed and evaluated the same 100 dense-RAG answers and the same 100 TF-IDF+dense-RAG answers again with **GPT-5.6 Sol**.
+
+The second judge scored:
+
+- faithfulness to retrieved context
+- factual correctness against the reference answer
+- answer relevancy to the original question
+
+This is a **secondary external evaluation**. It is included to study judge agreement, not to claim that the external judge is infallible.
+
+### GPT-5.6 Sol Results
+
+| Metric | Dense | TF-IDF + Dense |
+|---|---:|---:|
+| Faithfulness | 0.831 | **0.848** |
+| Factual Correctness | 0.753 | **0.775** |
+| Answer Relevancy | 0.912 | **0.921** |
+
+Under this stronger judge, TF-IDF + dense improves all three scored generation metrics slightly.
+
+
+### Manual Spot-Check of the Two Judges
+
+I also manually reviewed **5 questions** and compared both automated judges against my own assessment for:
+
+- faithfulness to the retrieved context
+- factual correctness against the reference answer
+
+The judges were:
+
+```text
+Local RAGAS judge:
+qwen2.5:1.5b-instruct
+
+Secondary external judge:
+GPT-5.6 Sol
+```
+
+On this 5-question human spot-check, **GPT-5.6 Sol matched my manual judgments much better than the local `qwen2.5:1.5b-instruct` judge**.
+
+I therefore treat the local judge as the reproducible baseline evaluator, but I place more confidence in GPT-5.6 Sol when interpreting nuanced generation-quality cases. I still keep both sets of results because the disagreement itself is useful evidence about evaluator quality.
+
+The GPT-5.6 Sol files are saved evaluation artifacts. They are **not part of the fully local reproducible stack**. The local Qwen/RAGAS evaluation remains the reproducible judge pipeline.
+
+---
+
+## Evaluation Artifacts
+
+The repository stores both aggregate and per-question results so that the final averages can be traced back to individual questions.
+
+Important result files include:
+
+```text
+evaluation/
+  retrieval_ground_truth_simple.json
+  retrieval_ground_truth_100_hard.json
+  results/
+        07.1_compare_four_generation_evaluations.py
+        generation_eval_gen_qwen3_0.6b_judge_qwen2.5_1.5b-instruct_k3.csv
+        generation_eval_tfidf_dense_gen_qwen3_0.6b_judge_qwen2.5_1.5b-instruct_k3.csv
+        gpt56_sol_generation_evaluation_100.csv
+        gpt56_sol_tfidf_dense_generation_100.csv
+```
+
+---
+
+## Final Classical RAG Conclusion
+
+This project started as a small RAG refresher, but the most useful part became the evaluation process.
+
+The main lessons were:
+
+- retrieval should be evaluated before blaming the generator;
+- a simple routing layer can be more cost-effective than immediately adding a heavier reranker;
+- exact evidence metrics and source-level metrics reveal different retrieval problems;
+- a reranker can improve ranking while still being unattractive on CPU because of latency;
+- a very small generator can still produce useful grounded answers when context is good;
+- end-to-end generation scores can change when retrieval changes even if retrieval recall looks similar;
+- LLM-as-a-judge evaluation is useful, but judge disagreement must be treated as part of the result; in a 5-question manual spot-check, `GPT-5.6 Sol` aligned much better with my judgments than `qwen2.5:1.5b-instruct`.
+
+The final classical RAG experiments are therefore preserved as a baseline for the next stage.
+
+---
+
+## Next Stage - GraphRAG / Neo4j
+
+The next work in this same repository will add GraphRAG rather than starting a separate project.
+
+The goal is to use the same fictional HR policies and, where appropriate, the same benchmark questions so that the comparison is meaningful.
+
+The intended comparison becomes:
+
+```text
+Dense RAG
+    vs
+TF-IDF + Dense RAG
+    vs
+GraphRAG / Neo4j
+```
+
+GraphRAG work will begin with the **08** source-file series.
