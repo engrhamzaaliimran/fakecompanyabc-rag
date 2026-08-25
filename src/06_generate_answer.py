@@ -72,7 +72,7 @@ embedding_model = OllamaEmbeddings(
 )
 
 llm = ChatOllama(
-    model="qwen3:1.7b",
+    model="qwen3:0.6b",
     temperature=0,
 )
 
