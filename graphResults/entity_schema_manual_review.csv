@@ -1,0 +1,32 @@
+Cluster,Main contents,Decision,Proposed entity type
+0,"PKR 6,000, PKR 6,500, PKR 26,000",Keep,MONEY_AMOUNT
+1,"6 hour, under 3 hour",Merge with 7/8/22/23,DURATION
+2,"at least 5, more than 5, up to 5",Reject for now,too context-dependent
+3,"FakeCompanyABC, office, security rule",Partly useful,ORGANIZATION for FakeCompanyABC only
+4,"carry-forward leave, carry-forward rule",Keep,LEAVE_RULE
+5,"manager approval, advance approval, HR approval",Keep,APPROVAL_REQUIREMENT
+6,"leave, paid leave, parental leave, leave balance",Keep,LEAVE_CONCEPT
+7,weeks,Merge,DURATION
+8,months,Merge,DURATION
+9,"business reason, business purpose, economy class",Mixed,reject/split later
+10,"policy, current policy, expense policy",Keep,POLICY
+11,"remote work, cross-border remote work",Keep,WORK_ARRANGEMENT
+12,remote-work allowance,Keep,REMOTE_WORK_ALLOWANCE
+13,"business travel, business travel policy",Keep,BUSINESS_TRAVEL
+14,dates,Keep,DATE
+15,"calendar year, year-end, annual",Keep,TIME_PERIOD
+16,"notice period, deadline, reimbursement timing",Keep,TIME_CONSTRAINT
+17,"meal limit, standard limit, maximum",Keep,LIMIT
+18,"hotel room-rate limit, allowable hotel rate",Keep,HOTEL_RATE_LIMIT
+19,"expense, expense claim, taxi expense",Keep,EXPENSE_CONCEPT
+20,"manager, direct manager, department director",Keep,JOB_ROLE
+21,"statutory entitlement, statutory right",Keep,ENTITLEMENT
+22,"working days, calendar days",Merge,DURATION
+23,"up to 3 days, at least 2 days",Merge,DURATION
+24,"team requirement, security requirement",Keep,REQUIREMENT
+25,"full-time employee, part-time employee",Keep,EMPLOYEE_TYPE
+26,"company device, company-managed device",Partly useful,COMPANY_RESOURCE
+27,"temporary exception, exception",Keep,EXCEPTION
+28,"air travel, rail travel, flight, public transport",Keep,TRANSPORT_MODE
+29,"Germany, Belgium, Spain, EUR + noise",Split manually,"COUNTRY, CURRENCY, MONEY_AMOUNT"
+30,"identifier note, notification, receipt",Reject,incoherent
