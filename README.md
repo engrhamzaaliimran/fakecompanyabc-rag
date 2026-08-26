@@ -22,7 +22,7 @@ The project now includes:
 - a second evaluation of the exact same saved answers using GPT-5.6 Sol
 - comparison of retrieval-pipeline effects and judge disagreement
 - manual validation on 5 questions, where I compared both judges against my own faithfulness and factual-correctness judgments
-
+---
 The **GraphRAG stage has now started** with the `08` source-file series.
 
 The current `08.1` milestone focuses on **entity-schema discovery before graph construction**. Instead of defining all entity types manually from the beginning, candidate concepts are discovered from the policy corpus, grouped semantically, and then manually reviewed.
