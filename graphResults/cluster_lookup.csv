@@ -1,0 +1,32 @@
+cluster_id,size,top_term,representative_terms
+0,4,"pkr 6,000","pkr 6,000 | pkr 6,500 | pkr 26,000 | pkr 32,000"
+1,4,6 hour,6 hour | more than 6 hour | under 3 hour | 3 hour
+2,3,at least 5,at least 5 | more than 5 | up to 5
+3,3,fakecompanyabc,fakecompanyabc | fakecompanyabc office | fakecompanyabc information-security rule
+4,4,carry-forward leave,carry-forward leave | carry-forward | remain carry-forward leave | carry-forward rule
+5,10,approval,approval | manager approval | director-level approval | reasonable and manager approval | additional approval | advance approval | hr and manager approval | approve channel | prior write approval | approve vpn
+6,9,leave,leave | pay leave | leave request | leave interaction | parental leave | annual-leave entitlement | annual leave policy | statutory parental-leave right | leave balance
+7,6,week,week | up to 4 consecutive week | at least 4 week | one week | weekly | up to 8 week
+8,3,only 8 month,only 8 month | 18 month | at least 12 month
+9,8,business reason,business reason | business purpose | business need | business class | both business | document business justification | only the business portion | economy class
+10,4,policy define,policy define | policy | current policy | expense policy define
+11,4,remote work,remote work | temporary remote work | remote-work arrangement | cross-border remote work
+12,3,remote-work allowance,remote-work allowance | standard remote-work allowance | additional remote-work allowance
+13,3,business travel,business travel | approve business travel | business travel policy
+14,5,1 january 2025,1 january 2025 | 1 january 2026 | 31 december 2025 | 31 march | transition day
+15,5,calendar year,calendar year | follow calendar year | following year | annual | year-end
+16,5,scheduled duration,scheduled duration | specific statutory notice period | unreasonable delay | submission deadline | reimbursement timing
+17,5,limit,limit | meal limit | standard limit | maximum of | standard maximum reimbursable meal expense
+18,7,hotel room-rate limit,hotel room-rate limit | maximum room rate | room rate | allowable hotel rate | maximum reimbursable room rate | hotel limit | follow nightly hotel limit
+19,8,expense,expense | expense claim | taxi expense | individual expense | lower-value expense | ride-hail expense | reasonable public-transport expense | claim
+20,3,direct manager,direct manager | manager | department director
+21,5,statutory entitlement,statutory entitlement | entitlement | greater entitlement | statutory right | statutory requirement
+22,7,30 work day,30 work day | consecutive working day | 5 consecutive working day | 24 working day | 30 calendar day | contract working day | 30 day
+23,5,at least 3 day,at least 3 day | up to 3 day | 3 day | at least 2 day | up to 2 day
+24,4,different requirement,different requirement | team requirement | role requirement | security requirement
+25,6,full-time employee,full-time employee | employee | part-time employee | eligible full-time employee | work | return employee
+26,4,company device,company device | company-manage device | company work | access company information
+27,3,temporary exception,temporary exception | specific temporary exception | exception
+28,7,air travel,air travel | rail travel | rail journey | destination | flight | international travel | public transport
+29,15,germany,germany | eur | belgium | country | version | person | spain | example | eur 145 | first
+30,3,exact identifier note,exact identifier note | internal notification | receipt
