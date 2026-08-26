@@ -1,0 +1,3267 @@
+{
+  "metadata": {
+    "stage": "08.2",
+    "task": "GLiNER domain entity extraction",
+    "created_at_utc": "2026-08-26T12:06:54.445163+00:00",
+    "input": "../dataset",
+    "schema_file": "/home/hamza/RAG-Practice/fakecompanyabc-rag/src/entity_schema_output/selected_entity_schema.csv",
+    "model": "urchade/gliner_medium-v2.1",
+    "threshold": 0.5,
+    "chunk_size": 700,
+    "chunk_overlap": 120,
+    "entity_type_count": 25,
+    "chunk_count": 20,
+    "entity_detection_count": 212,
+    "unique_entity_count": 98
+  },
+  "entity_schema": [
+    {
+      "entity_type": "MONEY_AMOUNT",
+      "gliner_label": "money amount"
+    },
+    {
+      "entity_type": "DURATION",
+      "gliner_label": "duration"
+    },
+    {
+      "entity_type": "ORGANIZATION",
+      "gliner_label": "organization"
+    },
+    {
+      "entity_type": "LEAVE_RULE",
+      "gliner_label": "leave rule"
+    },
+    {
+      "entity_type": "APPROVAL_REQUIREMENT",
+      "gliner_label": "approval requirement"
+    },
+    {
+      "entity_type": "LEAVE_CONCEPT",
+      "gliner_label": "leave concept"
+    },
+    {
+      "entity_type": "POLICY",
+      "gliner_label": "policy"
+    },
+    {
+      "entity_type": "WORK_ARRANGEMENT",
+      "gliner_label": "work arrangement"
+    },
+    {
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "gliner_label": "remote work allowance"
+    },
+    {
+      "entity_type": "BUSINESS_TRAVEL",
+      "gliner_label": "business travel"
+    },
+    {
+      "entity_type": "DATE",
+      "gliner_label": "date"
+    },
+    {
+      "entity_type": "TIME_PERIOD",
+      "gliner_label": "time period"
+    },
+    {
+      "entity_type": "TIME_CONSTRAINT",
+      "gliner_label": "time constraint"
+    },
+    {
+      "entity_type": "LIMIT",
+      "gliner_label": "limit"
+    },
+    {
+      "entity_type": "HOTEL_RATE_LIMIT",
+      "gliner_label": "hotel rate limit"
+    },
+    {
+      "entity_type": "EXPENSE_CONCEPT",
+      "gliner_label": "expense concept"
+    },
+    {
+      "entity_type": "JOB_ROLE",
+      "gliner_label": "job role"
+    },
+    {
+      "entity_type": "ENTITLEMENT",
+      "gliner_label": "entitlement"
+    },
+    {
+      "entity_type": "REQUIREMENT",
+      "gliner_label": "requirement"
+    },
+    {
+      "entity_type": "EMPLOYEE_TYPE",
+      "gliner_label": "employee type"
+    },
+    {
+      "entity_type": "COMPANY_RESOURCE",
+      "gliner_label": "company resource"
+    },
+    {
+      "entity_type": "EXCEPTION",
+      "gliner_label": "exception"
+    },
+    {
+      "entity_type": "TRANSPORT_MODE",
+      "gliner_label": "transport mode"
+    },
+    {
+      "entity_type": "COUNTRY",
+      "gliner_label": "country"
+    },
+    {
+      "entity_type": "CURRENCY",
+      "gliner_label": "currency"
+    }
+  ],
+  "unique_entities": [
+    {
+      "text": "additional approval",
+      "entity_type": "APPROVAL_REQUIREMENT",
+      "max_score": 0.531818,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "advance approval",
+      "entity_type": "APPROVAL_REQUIREMENT",
+      "max_score": 0.68217,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "approval",
+      "entity_type": "APPROVAL_REQUIREMENT",
+      "max_score": 0.762852,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_001",
+        "annual_leave__chunk_002",
+        "remote_work__chunk_003"
+      ]
+    },
+    {
+      "text": "manager approval",
+      "entity_type": "APPROVAL_REQUIREMENT",
+      "max_score": 0.798811,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/remote_work.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000",
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "prior written approval",
+      "entity_type": "APPROVAL_REQUIREMENT",
+      "max_score": 0.815858,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "approved business travel",
+      "entity_type": "BUSINESS_TRAVEL",
+      "max_score": 0.583093,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "approved corporate travel provider",
+      "entity_type": "BUSINESS_TRAVEL",
+      "max_score": 0.568077,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "Booking channels",
+      "entity_type": "BUSINESS_TRAVEL",
+      "max_score": 0.674651,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "business travel",
+      "entity_type": "BUSINESS_TRAVEL",
+      "max_score": 0.844418,
+      "occurrences": 5,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000",
+        "expense_policy__chunk_001",
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "Belgium",
+      "entity_type": "COUNTRY",
+      "max_score": 0.955982,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001",
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "country",
+      "entity_type": "COUNTRY",
+      "max_score": 0.719968,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "Germany",
+      "entity_type": "COUNTRY",
+      "max_score": 0.983683,
+      "occurrences": 12,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/expense_policy.md",
+        "../dataset/remote_work.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "annual_leave__chunk_003",
+        "expense_policy__chunk_001",
+        "remote_work__chunk_000",
+        "remote_work__chunk_003",
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002",
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "Germany-based",
+      "entity_type": "COUNTRY",
+      "max_score": 0.844654,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_003",
+        "remote_work__chunk_003"
+      ]
+    },
+    {
+      "text": "Pakistan",
+      "entity_type": "COUNTRY",
+      "max_score": 0.983745,
+      "occurrences": 9,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/expense_policy.md",
+        "../dataset/remote_work.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "annual_leave__chunk_003",
+        "expense_policy__chunk_001",
+        "remote_work__chunk_000",
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "Spain",
+      "entity_type": "COUNTRY",
+      "max_score": 0.980089,
+      "occurrences": 5,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/remote_work.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001",
+        "remote_work__chunk_003",
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002",
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "EUR",
+      "entity_type": "CURRENCY",
+      "max_score": 0.98663,
+      "occurrences": 16,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000",
+        "expense_policy__chunk_001",
+        "expense_policy__chunk_003",
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002",
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "Pakistani rupees",
+      "entity_type": "CURRENCY",
+      "max_score": 0.955387,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "PKR",
+      "entity_type": "CURRENCY",
+      "max_score": 0.903403,
+      "occurrences": 4,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000",
+        "expense_policy__chunk_001",
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "1 January 2025",
+      "entity_type": "DATE",
+      "max_score": 0.89666,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "1 January 2026",
+      "entity_type": "DATE",
+      "max_score": 0.953541,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_000",
+        "travel_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "2026",
+      "entity_type": "DATE",
+      "max_score": 0.805497,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "31 December 2025",
+      "entity_type": "DATE",
+      "max_score": 0.911296,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_001",
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "31 March",
+      "entity_type": "DATE",
+      "max_score": 0.827711,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_001"
+      ]
+    },
+    {
+      "text": "date",
+      "entity_type": "DATE",
+      "max_score": 0.581006,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "planned return date",
+      "entity_type": "DATE",
+      "max_score": 0.599783,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_001",
+        "parental_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "18 months",
+      "entity_type": "DURATION",
+      "max_score": 0.552626,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "3 days",
+      "entity_type": "DURATION",
+      "max_score": 0.542823,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "3 hours",
+      "entity_type": "DURATION",
+      "max_score": 0.858789,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "3 unused days",
+      "entity_type": "DURATION",
+      "max_score": 0.610921,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "30 calendar days",
+      "entity_type": "DURATION",
+      "max_score": 0.631801,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "5 days",
+      "entity_type": "DURATION",
+      "max_score": 0.713518,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "8 months",
+      "entity_type": "DURATION",
+      "max_score": 0.530115,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "8 unused days",
+      "entity_type": "DURATION",
+      "max_score": 0.619686,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "one week",
+      "entity_type": "DURATION",
+      "max_score": 0.622507,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_003"
+      ]
+    },
+    {
+      "text": "scheduled duration",
+      "entity_type": "DURATION",
+      "max_score": 0.842258,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "up to 2 days per week",
+      "entity_type": "DURATION",
+      "max_score": 0.540311,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "up to 3 days per week",
+      "entity_type": "DURATION",
+      "max_score": 0.602738,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "up to 4 consecutive weeks",
+      "entity_type": "DURATION",
+      "max_score": 0.630498,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_002"
+      ]
+    },
+    {
+      "text": "employee",
+      "entity_type": "EMPLOYEE_TYPE",
+      "max_score": 0.833557,
+      "occurrences": 15,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/parental_leave.md",
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_002",
+        "annual_leave__chunk_003",
+        "parental_leave__chunk_002",
+        "parental_leave__chunk_003",
+        "remote_work__chunk_001",
+        "remote_work__chunk_003"
+      ]
+    },
+    {
+      "text": "Employees",
+      "entity_type": "EMPLOYEE_TYPE",
+      "max_score": 0.913036,
+      "occurrences": 14,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/expense_policy.md",
+        "../dataset/parental_leave.md",
+        "../dataset/remote_work.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_001",
+        "annual_leave__chunk_002",
+        "expense_policy__chunk_000",
+        "expense_policy__chunk_001",
+        "parental_leave__chunk_000",
+        "remote_work__chunk_000",
+        "remote_work__chunk_001",
+        "remote_work__chunk_002",
+        "travel_policy__chunk_000",
+        "travel_policy__chunk_002",
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "Full-time employees",
+      "entity_type": "EMPLOYEE_TYPE",
+      "max_score": 0.948066,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "parental_leave__chunk_001"
+      ]
+    },
+    {
+      "text": "Part-time employees",
+      "entity_type": "EMPLOYEE_TYPE",
+      "max_score": 0.947026,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "parental_leave__chunk_001"
+      ]
+    },
+    {
+      "text": "annual entitlement",
+      "entity_type": "ENTITLEMENT",
+      "max_score": 0.857969,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "Annual leave entitlement",
+      "entity_type": "ENTITLEMENT",
+      "max_score": 0.854479,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000"
+      ]
+    },
+    {
+      "text": "annual-leave entitlement",
+      "entity_type": "ENTITLEMENT",
+      "max_score": 0.785702,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "specific temporary exception",
+      "entity_type": "EXCEPTION",
+      "max_score": 0.575348,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "temporary exception",
+      "entity_type": "EXCEPTION",
+      "max_score": 0.651702,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_002"
+      ]
+    },
+    {
+      "text": "Temporary exceptions",
+      "entity_type": "EXCEPTION",
+      "max_score": 0.827211,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_002"
+      ]
+    },
+    {
+      "text": "Approved expenses",
+      "entity_type": "EXPENSE_CONCEPT",
+      "max_score": 0.693966,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "expense policy",
+      "entity_type": "EXPENSE_CONCEPT",
+      "max_score": 0.557481,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "Personal purchases",
+      "entity_type": "EXPENSE_CONCEPT",
+      "max_score": 0.763115,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "Reasonable public-transport expenses",
+      "entity_type": "EXPENSE_CONCEPT",
+      "max_score": 0.702062,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "Hotel room-rate limits",
+      "entity_type": "HOTEL_RATE_LIMIT",
+      "max_score": 0.687721,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "department director",
+      "entity_type": "JOB_ROLE",
+      "max_score": 0.854319,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_002"
+      ]
+    },
+    {
+      "text": "Annual leave",
+      "entity_type": "LEAVE_CONCEPT",
+      "max_score": 0.685269,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000"
+      ]
+    },
+    {
+      "text": "Leave requests",
+      "entity_type": "LEAVE_CONCEPT",
+      "max_score": 0.506426,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/annual_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_001"
+      ]
+    },
+    {
+      "text": "parental leave",
+      "entity_type": "LEAVE_CONCEPT",
+      "max_score": 0.60474,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_000"
+      ]
+    },
+    {
+      "text": "carry-forward rules",
+      "entity_type": "LEAVE_RULE",
+      "max_score": 0.604026,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "parental_leave__chunk_002",
+        "parental_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "hotel limits",
+      "entity_type": "LIMIT",
+      "max_score": 0.566381,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001",
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "nightly hotel limits",
+      "entity_type": "LIMIT",
+      "max_score": 0.570821,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "standard 2025 limit",
+      "entity_type": "LIMIT",
+      "max_score": 0.561186,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "standard limit",
+      "entity_type": "LIMIT",
+      "max_score": 0.714712,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "FakeCompanyABC",
+      "entity_type": "ORGANIZATION",
+      "max_score": 0.880922,
+      "occurrences": 7,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/parental_leave.md",
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "parental_leave__chunk_000",
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "HR",
+      "entity_type": "ORGANIZATION",
+      "max_score": 0.688221,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_001",
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "Annual Leave Policy",
+      "entity_type": "POLICY",
+      "max_score": 0.82412,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/annual_leave.md",
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "annual_leave__chunk_000",
+        "parental_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "Annual Leave Policy HR-LEV-0101",
+      "entity_type": "POLICY",
+      "max_score": 0.778085,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "Business Travel Policy",
+      "entity_type": "POLICY",
+      "max_score": 0.744652,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "expense policy",
+      "entity_type": "POLICY",
+      "max_score": 0.592962,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "Expense Reimbursement Policy",
+      "entity_type": "POLICY",
+      "max_score": 0.813974,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "FakeCompanyABC information-security rules",
+      "entity_type": "POLICY",
+      "max_score": 0.565363,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_002"
+      ]
+    },
+    {
+      "text": "Historical limits",
+      "entity_type": "POLICY",
+      "max_score": 0.574397,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "Hotel limits",
+      "entity_type": "POLICY",
+      "max_score": 0.677357,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "HR-TRV-0173",
+      "entity_type": "POLICY",
+      "max_score": 0.760616,
+      "occurrences": 3,
+      "sources": [
+        "../dataset/expense_policy.md",
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001",
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "local law",
+      "entity_type": "POLICY",
+      "max_score": 0.55923,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_000"
+      ]
+    },
+    {
+      "text": "Parental Leave and Return-to-Work Policy",
+      "entity_type": "POLICY",
+      "max_score": 0.867057,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_000"
+      ]
+    },
+    {
+      "text": "Remote Work Policy",
+      "entity_type": "POLICY",
+      "max_score": 0.687386,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "Remote Work Policy HR-RMT-0204",
+      "entity_type": "POLICY",
+      "max_score": 0.783734,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "team scheduling",
+      "entity_type": "POLICY",
+      "max_score": 0.662626,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "travel policy",
+      "entity_type": "POLICY",
+      "max_score": 0.544706,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001"
+      ]
+    },
+    {
+      "text": "travel policy 0173",
+      "entity_type": "POLICY",
+      "max_score": 0.668213,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_003"
+      ]
+    },
+    {
+      "text": "company-paid transition days",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.622376,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_003"
+      ]
+    },
+    {
+      "text": "Cross-border remote work",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.709829,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "normal weekly remote-work allowance",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.777626,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "remote-work allowance",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.622446,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "Remote-work allowances",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.561902,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "Standard remote-work allowance",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.825769,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_000"
+      ]
+    },
+    {
+      "text": "working remotely",
+      "entity_type": "REMOTE_WORK_ALLOWANCE",
+      "max_score": 0.516207,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "employment-law requirements",
+      "entity_type": "REQUIREMENT",
+      "max_score": 0.54626,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "Security requirements",
+      "entity_type": "REQUIREMENT",
+      "max_score": 0.585077,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/remote_work.md"
+      ],
+      "chunk_ids": [
+        "remote_work__chunk_001"
+      ]
+    },
+    {
+      "text": "Air travel",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.693875,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "flights",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.600435,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "Ground transportation",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.911863,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_001",
+        "expense_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "International travel",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.66651,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_000"
+      ]
+    },
+    {
+      "text": "public transport",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.679743,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/expense_policy.md"
+      ],
+      "chunk_ids": [
+        "expense_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "rail journeys",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.846838,
+      "occurrences": 2,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "Rail travel",
+      "entity_type": "TRANSPORT_MODE",
+      "max_score": 0.907066,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/travel_policy.md"
+      ],
+      "chunk_ids": [
+        "travel_policy__chunk_002"
+      ]
+    },
+    {
+      "text": "remote-work arrangement",
+      "entity_type": "WORK_ARRANGEMENT",
+      "max_score": 0.597471,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_002"
+      ]
+    },
+    {
+      "text": "Return-to-work arrangement",
+      "entity_type": "WORK_ARRANGEMENT",
+      "max_score": 0.938169,
+      "occurrences": 1,
+      "sources": [
+        "../dataset/parental_leave.md"
+      ],
+      "chunk_ids": [
+        "parental_leave__chunk_001"
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "annual_leave__chunk_000",
+      "document_index": 0,
+      "chunk_index": 0,
+      "source": "../dataset/annual_leave.md",
+      "text": "FakeCompanyABC Annual Leave Policy.\n\nPurpose.\n\nThis policy defines annual paid leave, carry-forward rules, and the process for requesting leave at FakeCompanyABC.\n\nAnnual leave entitlement.\n\nAnnual leave depends on the employee's contractual work location.\n\nGermany.\n\nFull-time employees whose contractual work location is Germany receive 30 working days of paid annual leave per calendar year.\n\nPakistan.\n\nFull-time employees whose contractual work location is Pakistan receive 24 working days of paid annual leave per calendar year.\n\nPart-time employees receive annual leave on a pro-rata basis according to their contracted working days.\n\nCarry-forward.",
+      "entities": [
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.5655604004859924,
+          "start": 0,
+          "end": 14
+        },
+        {
+          "text": "Annual Leave Policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.7345212697982788,
+          "start": 15,
+          "end": 34
+        },
+        {
+          "text": "carry-forward rules",
+          "entity_type": "LEAVE_RULE",
+          "gliner_label": "leave rule",
+          "score": 0.6040260791778564,
+          "start": 86,
+          "end": 105
+        },
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.6632422208786011,
+          "start": 147,
+          "end": 161
+        },
+        {
+          "text": "Annual leave entitlement",
+          "entity_type": "ENTITLEMENT",
+          "gliner_label": "entitlement",
+          "score": 0.8544789552688599,
+          "start": 164,
+          "end": 188
+        },
+        {
+          "text": "Annual leave",
+          "entity_type": "LEAVE_CONCEPT",
+          "gliner_label": "leave concept",
+          "score": 0.6852692365646362,
+          "start": 191,
+          "end": 203
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9791380763053894,
+          "start": 258,
+          "end": 265
+        },
+        {
+          "text": "Full-time employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.9442380666732788,
+          "start": 268,
+          "end": 287
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9511995315551758,
+          "start": 323,
+          "end": 330
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9761048555374146,
+          "start": 396,
+          "end": 404
+        },
+        {
+          "text": "Full-time employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.9480656385421753,
+          "start": 407,
+          "end": 426
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9629632830619812,
+          "start": 462,
+          "end": 470
+        },
+        {
+          "text": "Part-time employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.947025716304779,
+          "start": 536,
+          "end": 555
+        },
+        {
+          "text": "annual leave",
+          "entity_type": "LEAVE_CONCEPT",
+          "gliner_label": "leave concept",
+          "score": 0.6467812657356262,
+          "start": 564,
+          "end": 576
+        }
+      ]
+    },
+    {
+      "chunk_id": "annual_leave__chunk_001",
+      "document_index": 0,
+      "chunk_index": 1,
+      "source": "../dataset/annual_leave.md",
+      "text": "Carry-forward.\n\nEmployees may carry forward a maximum of 5 unused annual-leave days into the following calendar year.\n\nCarried-forward leave must normally be used by 31 March of the following year. Any remaining carried-forward leave expires after that date unless HR has approved an exception in writing.\n\nLeave requests.\n\nLeave of 5 consecutive working days or fewer should normally be requested at least 5 working days in advance.\n\nLeave of more than 5 consecutive working days should normally be requested at least 3 weeks in advance.\n\nAll annual-leave requests require approval from the employee's direct manager.\n\nProbation.",
+      "entities": [
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6706820726394653,
+          "start": 16,
+          "end": 25
+        },
+        {
+          "text": "31 March",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.8277106881141663,
+          "start": 166,
+          "end": 174
+        },
+        {
+          "text": "HR",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.6882206201553345,
+          "start": 265,
+          "end": 267
+        },
+        {
+          "text": "Leave requests",
+          "entity_type": "LEAVE_CONCEPT",
+          "gliner_label": "leave concept",
+          "score": 0.506426215171814,
+          "start": 307,
+          "end": 321
+        },
+        {
+          "text": "approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.5783325433731079,
+          "start": 574,
+          "end": 582
+        }
+      ]
+    },
+    {
+      "chunk_id": "annual_leave__chunk_002",
+      "document_index": 0,
+      "chunk_index": 2,
+      "source": "../dataset/annual_leave.md",
+      "text": "All annual-leave requests require approval from the employee's direct manager.\n\nProbation.\n\nEmployees may request annual leave during probation, but approval depends on business needs and manager approval. The annual entitlement itself is not reduced because an employee is on probation.\n\nImportant interpretation note.\n\nThe annual entitlement is based on the employee's contractual work location, not nationality, citizenship, or the country from which the employee happens to work temporarily.\n\nExamples.",
+      "entities": [
+        {
+          "text": "approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.7628515958786011,
+          "start": 34,
+          "end": 42
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6381450295448303,
+          "start": 52,
+          "end": 60
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6531591415405273,
+          "start": 92,
+          "end": 101
+        },
+        {
+          "text": "annual entitlement",
+          "entity_type": "ENTITLEMENT",
+          "gliner_label": "entitlement",
+          "score": 0.8579691648483276,
+          "start": 210,
+          "end": 228
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7449005246162415,
+          "start": 262,
+          "end": 270
+        },
+        {
+          "text": "annual entitlement",
+          "entity_type": "ENTITLEMENT",
+          "gliner_label": "entitlement",
+          "score": 0.8508813977241516,
+          "start": 325,
+          "end": 343
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7373521327972412,
+          "start": 360,
+          "end": 368
+        },
+        {
+          "text": "country",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.7199680209159851,
+          "start": 435,
+          "end": 442
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6142175197601318,
+          "start": 458,
+          "end": 466
+        }
+      ]
+    },
+    {
+      "chunk_id": "annual_leave__chunk_003",
+      "document_index": 0,
+      "chunk_index": 3,
+      "source": "../dataset/annual_leave.md",
+      "text": "Examples.\n\nAn employee contracted in Germany with 8 unused days at year-end may carry forward only 5 days.\nAn employee contracted in Pakistan with 3 unused days may carry all 3 days forward.\nA Germany-based employee temporarily working from Pakistan still follows the Germany annual-leave entitlement unless the employment contract is changed.",
+      "entities": [
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.8065555691719055,
+          "start": 14,
+          "end": 22
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9424223899841309,
+          "start": 37,
+          "end": 44
+        },
+        {
+          "text": "8 unused days",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.6196863055229187,
+          "start": 50,
+          "end": 63
+        },
+        {
+          "text": "5 days",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.7135184407234192,
+          "start": 99,
+          "end": 105
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.8335566520690918,
+          "start": 110,
+          "end": 118
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9299070835113525,
+          "start": 133,
+          "end": 141
+        },
+        {
+          "text": "3 unused days",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.6109208464622498,
+          "start": 147,
+          "end": 160
+        },
+        {
+          "text": "3 days",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.5428232550621033,
+          "start": 175,
+          "end": 181
+        },
+        {
+          "text": "Germany-based",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.5652228593826294,
+          "start": 193,
+          "end": 206
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7550292015075684,
+          "start": 207,
+          "end": 215
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9099335074424744,
+          "start": 241,
+          "end": 249
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9580945372581482,
+          "start": 268,
+          "end": 275
+        },
+        {
+          "text": "annual-leave entitlement",
+          "entity_type": "ENTITLEMENT",
+          "gliner_label": "entitlement",
+          "score": 0.7857018113136292,
+          "start": 276,
+          "end": 300
+        }
+      ]
+    },
+    {
+      "chunk_id": "expense_policy__chunk_000",
+      "document_index": 1,
+      "chunk_index": 0,
+      "source": "../dataset/expense_policy.md",
+      "text": "FakeCompanyABC Expense Reimbursement Policy.\n\nSubmission deadline.\n\nEmployees must normally submit business-expense claims within 30 calendar days of the expense date.\n\nClaims submitted after 30 days require an explanation and may require additional approval.\n\nReceipts.\n\nA receipt is required for any individual expense above:\n\nEUR 20 for expenses paid in euros;\nPKR 6,000 for expenses paid in Pakistani rupees.\n\nFor lower-value expenses without a receipt, the employee must still provide the date, amount, and business purpose.\n\nMeals during business travel.\n\nThe standard maximum reimbursable meal expense per person is:",
+      "entities": [
+        {
+          "text": "Expense Reimbursement Policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.8139740228652954,
+          "start": 15,
+          "end": 43
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7016725540161133,
+          "start": 68,
+          "end": 77
+        },
+        {
+          "text": "30 calendar days",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.6318009495735168,
+          "start": 130,
+          "end": 146
+        },
+        {
+          "text": "additional approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.5318177342414856,
+          "start": 239,
+          "end": 258
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.847109854221344,
+          "start": 329,
+          "end": 332
+        },
+        {
+          "text": "PKR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.8111703395843506,
+          "start": 364,
+          "end": 367
+        },
+        {
+          "text": "Pakistani rupees",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9553868770599365,
+          "start": 395,
+          "end": 411
+        },
+        {
+          "text": "date",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.5810059309005737,
+          "start": 494,
+          "end": 498
+        },
+        {
+          "text": "business travel",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.8444181084632874,
+          "start": 544,
+          "end": 559
+        }
+      ]
+    },
+    {
+      "chunk_id": "expense_policy__chunk_001",
+      "document_index": 1,
+      "chunk_index": 1,
+      "source": "../dataset/expense_policy.md",
+      "text": "Meals during business travel.\n\nThe standard maximum reimbursable meal expense per person is:\n\nLocation. Maximum per meal.\nGermany. EUR 35.\nBelgium. EUR 40.\nSpain. EUR 35.\nPakistan. PKR 6,500.\n\nAlcoholic beverages are not reimbursable under the standard meal allowance.\n\nHotels.\n\nHotel room-rate limits are not defined by this policy.\n\nFor hotel limits, employees must use the current Business Travel Policy, HR-TRV-0173.\n\nThis is intentional: the expense policy defines how claims are submitted, while the travel policy defines allowable hotel rates.\n\nGround transportation.\n\nReasonable public-transport expenses are reimbursable for approved business travel.",
+      "entities": [
+        {
+          "text": "business travel",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.7386894822120667,
+          "start": 13,
+          "end": 28
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9732216596603394,
+          "start": 122,
+          "end": 129
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9549786448478699,
+          "start": 131,
+          "end": 134
+        },
+        {
+          "text": "Belgium",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.939389169216156,
+          "start": 139,
+          "end": 146
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9724901914596558,
+          "start": 148,
+          "end": 151
+        },
+        {
+          "text": "Spain",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.971135139465332,
+          "start": 156,
+          "end": 161
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.97109454870224,
+          "start": 163,
+          "end": 166
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9746349453926086,
+          "start": 171,
+          "end": 179
+        },
+        {
+          "text": "PKR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.8870100378990173,
+          "start": 181,
+          "end": 184
+        },
+        {
+          "text": "Hotel room-rate limits",
+          "entity_type": "HOTEL_RATE_LIMIT",
+          "gliner_label": "hotel rate limit",
+          "score": 0.6877207159996033,
+          "start": 279,
+          "end": 301
+        },
+        {
+          "text": "hotel limits",
+          "entity_type": "LIMIT",
+          "gliner_label": "limit",
+          "score": 0.5158540606498718,
+          "start": 339,
+          "end": 351
+        },
+        {
+          "text": "employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7304825782775879,
+          "start": 353,
+          "end": 362
+        },
+        {
+          "text": "Business Travel Policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.7446520924568176,
+          "start": 384,
+          "end": 406
+        },
+        {
+          "text": "HR-TRV-0173",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6241202354431152,
+          "start": 408,
+          "end": 419
+        },
+        {
+          "text": "expense policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.5929616093635559,
+          "start": 447,
+          "end": 461
+        },
+        {
+          "text": "travel policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.5447059869766235,
+          "start": 506,
+          "end": 519
+        },
+        {
+          "text": "Ground transportation",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.9118630886077881,
+          "start": 552,
+          "end": 573
+        },
+        {
+          "text": "business travel",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.7832586765289307,
+          "start": 643,
+          "end": 658
+        }
+      ]
+    },
+    {
+      "chunk_id": "expense_policy__chunk_002",
+      "document_index": 1,
+      "chunk_index": 2,
+      "source": "../dataset/expense_policy.md",
+      "text": "Ground transportation.\n\nReasonable public-transport expenses are reimbursable for approved business travel.\n\nTaxi or ride-hailing expenses are reimbursable when public transport is impractical, unavailable, or would create an unreasonable delay. The business reason should be included in the expense claim.\n\nPersonal purchases.\n\nPersonal purchases are not reimbursable.\n\nIf a receipt contains both business and personal items, only the business portion may be claimed.\n\nReimbursement timing.\n\nApproved expenses are normally reimbursed with the next available payroll cycle after finance completes review.\n\nExamples.",
+      "entities": [
+        {
+          "text": "Ground transportation",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.8063356280326843,
+          "start": 0,
+          "end": 21
+        },
+        {
+          "text": "Reasonable public-transport expenses",
+          "entity_type": "EXPENSE_CONCEPT",
+          "gliner_label": "expense concept",
+          "score": 0.702061653137207,
+          "start": 24,
+          "end": 60
+        },
+        {
+          "text": "approved business travel",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.5830931067466736,
+          "start": 82,
+          "end": 106
+        },
+        {
+          "text": "public transport",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.6797429323196411,
+          "start": 161,
+          "end": 177
+        },
+        {
+          "text": "Personal purchases",
+          "entity_type": "EXPENSE_CONCEPT",
+          "gliner_label": "expense concept",
+          "score": 0.7341124415397644,
+          "start": 308,
+          "end": 326
+        },
+        {
+          "text": "Personal purchases",
+          "entity_type": "EXPENSE_CONCEPT",
+          "gliner_label": "expense concept",
+          "score": 0.7631151080131531,
+          "start": 329,
+          "end": 347
+        },
+        {
+          "text": "Approved expenses",
+          "entity_type": "EXPENSE_CONCEPT",
+          "gliner_label": "expense concept",
+          "score": 0.6939657330513,
+          "start": 493,
+          "end": 510
+        }
+      ]
+    },
+    {
+      "chunk_id": "expense_policy__chunk_003",
+      "document_index": 1,
+      "chunk_index": 3,
+      "source": "../dataset/expense_policy.md",
+      "text": "Examples.\n\nA EUR 18 taxi expense does not require a receipt under the general receipt threshold, but the business purpose must still be recorded.\nA EUR 28 meal requires a receipt.\nA hotel claim should be checked against HR-TRV-0173, not against the meal limits in this document.",
+      "entities": [
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9767853021621704,
+          "start": 13,
+          "end": 16
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9794914722442627,
+          "start": 148,
+          "end": 151
+        }
+      ]
+    },
+    {
+      "chunk_id": "parental_leave__chunk_000",
+      "document_index": 2,
+      "chunk_index": 0,
+      "source": "../dataset/parental_leave.md",
+      "text": "FakeCompanyABC Parental Leave and Return-to-Work Policy.\n\nScope.\n\nThis document describes FakeCompanyABC's internal notification and return-to-work procedures related to parental leave.\n\nIt does not replace statutory parental-leave rights. Where local law provides a greater entitlement or different requirement, local law takes precedence.\n\nNotification.\n\nEmployees should notify HR and their manager as early as reasonably possible when planning parental leave.\n\nWhere a specific statutory notice period applies, the statutory requirement must be followed.\n\nCompany-paid transition days.",
+      "entities": [
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.8278530836105347,
+          "start": 0,
+          "end": 14
+        },
+        {
+          "text": "Parental Leave and Return-to-Work Policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.8670569658279419,
+          "start": 15,
+          "end": 55
+        },
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.8809218406677246,
+          "start": 90,
+          "end": 104
+        },
+        {
+          "text": "parental leave",
+          "entity_type": "LEAVE_CONCEPT",
+          "gliner_label": "leave concept",
+          "score": 0.6047398447990417,
+          "start": 170,
+          "end": 184
+        },
+        {
+          "text": "local law",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.5592300295829773,
+          "start": 246,
+          "end": 255
+        },
+        {
+          "text": "local law",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.5149595141410828,
+          "start": 313,
+          "end": 322
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7206680774688721,
+          "start": 357,
+          "end": 366
+        },
+        {
+          "text": "parental leave",
+          "entity_type": "LEAVE_CONCEPT",
+          "gliner_label": "leave concept",
+          "score": 0.5243927240371704,
+          "start": 448,
+          "end": 462
+        }
+      ]
+    },
+    {
+      "chunk_id": "parental_leave__chunk_001",
+      "document_index": 2,
+      "chunk_index": 1,
+      "source": "../dataset/parental_leave.md",
+      "text": "Company-paid transition days.\n\nIn addition to any statutory entitlement, eligible full-time employees who have completed at least 12 months of continuous service may receive up to 5 company-paid transition days associated with the birth or adoption of a child.\n\nThese transition days are separate from annual leave.\n\nPart-time employees receive transition days on a pro-rata basis.\n\nReturn-to-work arrangement.\n\nAn employee returning from parental leave may request a temporary reduced-work schedule for up to 8 weeks.\n\nThe request should normally be submitted at least 4 weeks before the planned return date.",
+      "entities": [
+        {
+          "text": "full-time employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7750691771507263,
+          "start": 82,
+          "end": 101
+        },
+        {
+          "text": "Part-time employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.8563802242279053,
+          "start": 317,
+          "end": 336
+        },
+        {
+          "text": "Return-to-work arrangement",
+          "entity_type": "WORK_ARRANGEMENT",
+          "gliner_label": "work arrangement",
+          "score": 0.9381691813468933,
+          "start": 383,
+          "end": 409
+        },
+        {
+          "text": "planned return date",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.5997825264930725,
+          "start": 589,
+          "end": 608
+        }
+      ]
+    },
+    {
+      "chunk_id": "parental_leave__chunk_002",
+      "document_index": 2,
+      "chunk_index": 2,
+      "source": "../dataset/parental_leave.md",
+      "text": "The request should normally be submitted at least 4 weeks before the planned return date.\n\nApproval depends on role requirements, local law, and agreement with HR and the employee's manager.\n\nRemote work after parental leave.\n\nReturning from parental leave does not automatically create an additional remote-work allowance.\n\nAny remote-work arrangement must follow Remote Work Policy HR-RMT-0204 unless a specific temporary exception is approved.\n\nAnnual leave interaction.\n\nCompany-paid transition days are not deducted from the employee's annual-leave balance.\n\nUnused annual leave remains governed by Annual Leave Policy HR-LEV-0101, including its carry-forward rules.\n\nExamples.",
+      "entities": [
+        {
+          "text": "planned return date",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.5134850740432739,
+          "start": 69,
+          "end": 88
+        },
+        {
+          "text": "remote-work allowance",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.6224455833435059,
+          "start": 301,
+          "end": 322
+        },
+        {
+          "text": "remote-work arrangement",
+          "entity_type": "WORK_ARRANGEMENT",
+          "gliner_label": "work arrangement",
+          "score": 0.5974705815315247,
+          "start": 329,
+          "end": 352
+        },
+        {
+          "text": "Remote Work Policy HR-RMT-0204",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.7837342619895935,
+          "start": 365,
+          "end": 395
+        },
+        {
+          "text": "specific temporary exception",
+          "entity_type": "EXCEPTION",
+          "gliner_label": "exception",
+          "score": 0.5753477215766907,
+          "start": 405,
+          "end": 433
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.514366865158081,
+          "start": 530,
+          "end": 538
+        },
+        {
+          "text": "Annual Leave Policy HR-LEV-0101",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.7780847549438477,
+          "start": 604,
+          "end": 635
+        },
+        {
+          "text": "carry-forward rules",
+          "entity_type": "LEAVE_RULE",
+          "gliner_label": "leave rule",
+          "score": 0.5309216380119324,
+          "start": 651,
+          "end": 670
+        }
+      ]
+    },
+    {
+      "chunk_id": "parental_leave__chunk_003",
+      "document_index": 2,
+      "chunk_index": 3,
+      "source": "../dataset/parental_leave.md",
+      "text": "Unused annual leave remains governed by Annual Leave Policy HR-LEV-0101, including its carry-forward rules.\n\nExamples.\n\nAn eligible full-time employee with 18 months of service may receive up to 5 company-paid transition days.\nAn employee with only 8 months of continuous service is not eligible for the company-paid transition days under this policy, although statutory rights may still apply.\nA returning employee requesting temporary remote work must also consider HR-RMT-0204.",
+      "entities": [
+        {
+          "text": "Annual Leave Policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.8241201639175415,
+          "start": 40,
+          "end": 59
+        },
+        {
+          "text": "carry-forward rules",
+          "entity_type": "LEAVE_RULE",
+          "gliner_label": "leave rule",
+          "score": 0.5765579342842102,
+          "start": 87,
+          "end": 106
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6478461623191833,
+          "start": 142,
+          "end": 150
+        },
+        {
+          "text": "18 months",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.5526263117790222,
+          "start": 156,
+          "end": 165
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6058268547058105,
+          "start": 230,
+          "end": 238
+        },
+        {
+          "text": "8 months",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.5301150679588318,
+          "start": 249,
+          "end": 257
+        },
+        {
+          "text": "company-paid transition days",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.6223762035369873,
+          "start": 304,
+          "end": 332
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6797858476638794,
+          "start": 407,
+          "end": 415
+        }
+      ]
+    },
+    {
+      "chunk_id": "remote_work__chunk_000",
+      "document_index": 3,
+      "chunk_index": 0,
+      "source": "../dataset/remote_work.md",
+      "text": "FakeCompanyABC Remote Work Policy.\n\nStandard remote-work allowance.\n\nRemote-work allowances depend on contractual work location and team requirements.\n\nGermany.\n\nEmployees contracted in Germany may normally work remotely for up to 3 days per week, subject to manager approval and team scheduling.\n\nEmployees are normally expected to work from a FakeCompanyABC office at least 2 days per week.\n\nPakistan.\n\nEmployees contracted in Pakistan may normally work remotely for up to 2 days per week, subject to manager approval and team scheduling.\n\nEmployees are normally expected to work from a FakeCompanyABC office at least 3 days per week.\n\nWorking from another country.",
+      "entities": [
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.7703790068626404,
+          "start": 0,
+          "end": 14
+        },
+        {
+          "text": "Remote Work Policy",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6873860359191895,
+          "start": 15,
+          "end": 33
+        },
+        {
+          "text": "Standard remote-work allowance",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.8257693648338318,
+          "start": 36,
+          "end": 66
+        },
+        {
+          "text": "Remote-work allowances",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.5619020462036133,
+          "start": 69,
+          "end": 91
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9803815484046936,
+          "start": 152,
+          "end": 159
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.8855582475662231,
+          "start": 162,
+          "end": 171
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9426749348640442,
+          "start": 186,
+          "end": 193
+        },
+        {
+          "text": "up to 3 days per week",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.6027380228042603,
+          "start": 225,
+          "end": 246
+        },
+        {
+          "text": "manager approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.7988109588623047,
+          "start": 259,
+          "end": 275
+        },
+        {
+          "text": "team scheduling",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6242560744285583,
+          "start": 280,
+          "end": 295
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.8925520181655884,
+          "start": 298,
+          "end": 307
+        },
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.8072837591171265,
+          "start": 345,
+          "end": 359
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9642340540885925,
+          "start": 394,
+          "end": 402
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.913036048412323,
+          "start": 405,
+          "end": 414
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9300566911697388,
+          "start": 429,
+          "end": 437
+        },
+        {
+          "text": "up to 2 days per week",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.5403107404708862,
+          "start": 469,
+          "end": 490
+        },
+        {
+          "text": "manager approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.7753987312316895,
+          "start": 503,
+          "end": 519
+        },
+        {
+          "text": "team scheduling",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6626260280609131,
+          "start": 524,
+          "end": 539
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.8861315846443176,
+          "start": 542,
+          "end": 551
+        },
+        {
+          "text": "FakeCompanyABC",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.7975407242774963,
+          "start": 589,
+          "end": 603
+        }
+      ]
+    },
+    {
+      "chunk_id": "remote_work__chunk_001",
+      "document_index": 3,
+      "chunk_index": 1,
+      "source": "../dataset/remote_work.md",
+      "text": "Working from another country.\n\nWorking remotely from a country other than the employee's contractual work location is not automatically covered by the normal weekly remote-work allowance.\n\nCross-border remote work requires prior written approval from both HR and the employee's manager because tax, immigration, payroll, information-security, and employment-law requirements may apply.\n\nManager approval alone is not sufficient for cross-border remote work.\n\nSecurity requirements.\n\nEmployees working remotely must:",
+      "entities": [
+        {
+          "text": "normal weekly remote-work allowance",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.7776257991790771,
+          "start": 151,
+          "end": 186
+        },
+        {
+          "text": "Cross-border remote work",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.7098288536071777,
+          "start": 189,
+          "end": 213
+        },
+        {
+          "text": "prior written approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.8158575892448425,
+          "start": 223,
+          "end": 245
+        },
+        {
+          "text": "HR",
+          "entity_type": "ORGANIZATION",
+          "gliner_label": "organization",
+          "score": 0.5223024487495422,
+          "start": 256,
+          "end": 258
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.5492845773696899,
+          "start": 267,
+          "end": 275
+        },
+        {
+          "text": "employment-law requirements",
+          "entity_type": "REQUIREMENT",
+          "gliner_label": "requirement",
+          "score": 0.5462599396705627,
+          "start": 347,
+          "end": 374
+        },
+        {
+          "text": "cross-border remote work",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.5817690491676331,
+          "start": 432,
+          "end": 456
+        },
+        {
+          "text": "Security requirements",
+          "entity_type": "REQUIREMENT",
+          "gliner_label": "requirement",
+          "score": 0.5850771069526672,
+          "start": 459,
+          "end": 480
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6401265859603882,
+          "start": 483,
+          "end": 492
+        },
+        {
+          "text": "working remotely",
+          "entity_type": "REMOTE_WORK_ALLOWANCE",
+          "gliner_label": "remote work allowance",
+          "score": 0.516207218170166,
+          "start": 493,
+          "end": 509
+        }
+      ]
+    },
+    {
+      "chunk_id": "remote_work__chunk_002",
+      "document_index": 3,
+      "chunk_index": 2,
+      "source": "../dataset/remote_work.md",
+      "text": "Security requirements.\n\nEmployees working remotely must:\n\nuse the company-managed device for company work;\nconnect through the approved VPN when required;\nfollow FakeCompanyABC information-security rules;\nprevent unauthorized persons from accessing company information;\nreport loss or theft of company devices immediately.\n\nTemporary exceptions.\n\nA department director may approve a temporary exception to the weekly office-attendance requirement for up to 4 consecutive weeks.\n\nAn exception to office attendance does not automatically authorize cross-border remote work.\n\nExamples.",
+      "entities": [
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.5339066982269287,
+          "start": 24,
+          "end": 33
+        },
+        {
+          "text": "FakeCompanyABC information-security rules",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.5653630495071411,
+          "start": 162,
+          "end": 203
+        },
+        {
+          "text": "Temporary exceptions",
+          "entity_type": "EXCEPTION",
+          "gliner_label": "exception",
+          "score": 0.8272108435630798,
+          "start": 324,
+          "end": 344
+        },
+        {
+          "text": "department director",
+          "entity_type": "JOB_ROLE",
+          "gliner_label": "job role",
+          "score": 0.8543188571929932,
+          "start": 349,
+          "end": 368
+        },
+        {
+          "text": "temporary exception",
+          "entity_type": "EXCEPTION",
+          "gliner_label": "exception",
+          "score": 0.6517024040222168,
+          "start": 383,
+          "end": 402
+        },
+        {
+          "text": "up to 4 consecutive weeks",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.6304977536201477,
+          "start": 451,
+          "end": 476
+        }
+      ]
+    },
+    {
+      "chunk_id": "remote_work__chunk_003",
+      "document_index": 3,
+      "chunk_index": 3,
+      "source": "../dataset/remote_work.md",
+      "text": "An exception to office attendance does not automatically authorize cross-border remote work.\n\nExamples.\n\nA Germany-based employee working from home in Germany 3 days in one week may be allowed if the manager approves.\nA Pakistan-based employee normally has a maximum of 2 remote days per week.\nA Germany-based employee who wants to work from Spain for one week needs HR and manager approval even if the employee has unused remote-work days.",
+      "entities": [
+        {
+          "text": "Germany-based",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.8225693106651306,
+          "start": 107,
+          "end": 120
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6093407869338989,
+          "start": 121,
+          "end": 129
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9606471061706543,
+          "start": 151,
+          "end": 158
+        },
+        {
+          "text": "one week",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.5849940776824951,
+          "start": 169,
+          "end": 177
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.5958028435707092,
+          "start": 235,
+          "end": 243
+        },
+        {
+          "text": "Germany-based",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.8446542024612427,
+          "start": 296,
+          "end": 309
+        },
+        {
+          "text": "employee",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.5768936276435852,
+          "start": 310,
+          "end": 318
+        },
+        {
+          "text": "Spain",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.8434661030769348,
+          "start": 342,
+          "end": 347
+        },
+        {
+          "text": "one week",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.6225067973136902,
+          "start": 352,
+          "end": 360
+        },
+        {
+          "text": "approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.5307568907737732,
+          "start": 382,
+          "end": 390
+        }
+      ]
+    },
+    {
+      "chunk_id": "travel_policy__chunk_000",
+      "document_index": 4,
+      "chunk_index": 0,
+      "source": "../dataset/travel_policy.md",
+      "text": "FakeCompanyABC Business Travel Policy.\n\nApproval.\n\nAll business travel must be approved by the employee's manager before booking.\n\nInternational travel additionally requires the cost center to be identified before booking.\n\nAir travel.\n\nFor flights with a scheduled duration of 6 hours or less, employees should book economy class.\n\nFor flights with a scheduled duration of more than 6 hours, premium economy may be booked with manager approval.\n\nBusiness class requires director-level approval and a documented business justification.\n\nHotel limits — current policy.\n\nThe following nightly hotel limits apply from 1 January 2026:",
+      "entities": [
+        {
+          "text": "Business Travel",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.6417044997215271,
+          "start": 15,
+          "end": 30
+        },
+        {
+          "text": "business travel",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.6597621440887451,
+          "start": 55,
+          "end": 70
+        },
+        {
+          "text": "International travel",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.666510283946991,
+          "start": 131,
+          "end": 151
+        },
+        {
+          "text": "Air travel",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.6938750147819519,
+          "start": 224,
+          "end": 234
+        },
+        {
+          "text": "flights",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.5846382975578308,
+          "start": 241,
+          "end": 248
+        },
+        {
+          "text": "scheduled duration",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.8422584533691406,
+          "start": 256,
+          "end": 274
+        },
+        {
+          "text": "employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.793685793876648,
+          "start": 295,
+          "end": 304
+        },
+        {
+          "text": "flights",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.6004346609115601,
+          "start": 337,
+          "end": 344
+        },
+        {
+          "text": "scheduled duration",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.7880790829658508,
+          "start": 352,
+          "end": 370
+        },
+        {
+          "text": "Hotel limits",
+          "entity_type": "LIMIT",
+          "gliner_label": "limit",
+          "score": 0.5663805603981018,
+          "start": 537,
+          "end": 549
+        },
+        {
+          "text": "nightly hotel limits",
+          "entity_type": "LIMIT",
+          "gliner_label": "limit",
+          "score": 0.5708213448524475,
+          "start": 583,
+          "end": 603
+        },
+        {
+          "text": "1 January 2026",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.9535412192344666,
+          "start": 615,
+          "end": 629
+        }
+      ]
+    },
+    {
+      "chunk_id": "travel_policy__chunk_001",
+      "document_index": 4,
+      "chunk_index": 1,
+      "source": "../dataset/travel_policy.md",
+      "text": "Hotel limits — current policy.\n\nThe following nightly hotel limits apply from 1 January 2026:\n\nLocation. Maximum reimbursable room rate per night.\nGermany. EUR 160.\nBelgium. EUR 170.\nSpain. EUR 150.\nPakistan. PKR 32,000.\n\nThe limit applies to the room rate including mandatory hotel taxes, but excluding separately charged breakfast where breakfast is reimbursable under the expense policy.\n\nA higher rate may be reimbursed only if approved before booking by the employee's manager and the relevant cost-center owner.\n\nHistorical limits — do not use for travel from 2026 onward.\n\nUnder version 3.2, effective from 1 January 2025 through 31 December 2025, the hotel limits were:",
+      "entities": [
+        {
+          "text": "Hotel limits",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6773574948310852,
+          "start": 0,
+          "end": 12
+        },
+        {
+          "text": "1 January 2026",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.9075126647949219,
+          "start": 78,
+          "end": 92
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.967703104019165,
+          "start": 147,
+          "end": 154
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9358638525009155,
+          "start": 156,
+          "end": 159
+        },
+        {
+          "text": "Belgium",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9209452867507935,
+          "start": 165,
+          "end": 172
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9484044313430786,
+          "start": 174,
+          "end": 177
+        },
+        {
+          "text": "Spain",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9573245644569397,
+          "start": 183,
+          "end": 188
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9796223640441895,
+          "start": 190,
+          "end": 193
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9779286980628967,
+          "start": 199,
+          "end": 207
+        },
+        {
+          "text": "PKR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9034034609794617,
+          "start": 209,
+          "end": 212
+        },
+        {
+          "text": "expense policy",
+          "entity_type": "EXPENSE_CONCEPT",
+          "gliner_label": "expense concept",
+          "score": 0.5574805736541748,
+          "start": 375,
+          "end": 389
+        },
+        {
+          "text": "Historical limits",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.5743966698646545,
+          "start": 519,
+          "end": 536
+        },
+        {
+          "text": "1 January 2025",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.8733270764350891,
+          "start": 614,
+          "end": 628
+        },
+        {
+          "text": "31 December 2025",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.8342150449752808,
+          "start": 637,
+          "end": 653
+        }
+      ]
+    },
+    {
+      "chunk_id": "travel_policy__chunk_002",
+      "document_index": 4,
+      "chunk_index": 2,
+      "source": "../dataset/travel_policy.md",
+      "text": "Under version 3.2, effective from 1 January 2025 through 31 December 2025, the hotel limits were:\n\nLocation. 2025 maximum room rate per night.\nGermany. EUR 130.\nBelgium. EUR 145.\nSpain. EUR 125.\nPakistan. PKR 26,000.\n\nThese values are retained here only for audit and historical-reference purposes.\n\nRail travel.\n\nStandard class should normally be used for rail journeys under 3 hours.\n\nFirst class may be used for rail journeys of 3 hours or more if the fare is reasonable and manager approval has been obtained.\n\nBooking channels.\n\nEmployees should use the approved corporate travel provider when it is available for the destination.",
+      "entities": [
+        {
+          "text": "1 January 2025",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.8966602087020874,
+          "start": 34,
+          "end": 48
+        },
+        {
+          "text": "31 December 2025",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.9112957715988159,
+          "start": 57,
+          "end": 73
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9836829304695129,
+          "start": 143,
+          "end": 150
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9573740363121033,
+          "start": 152,
+          "end": 155
+        },
+        {
+          "text": "Belgium",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9559817314147949,
+          "start": 161,
+          "end": 168
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9670687913894653,
+          "start": 170,
+          "end": 173
+        },
+        {
+          "text": "Spain",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9800889492034912,
+          "start": 179,
+          "end": 184
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9786388278007507,
+          "start": 186,
+          "end": 189
+        },
+        {
+          "text": "Pakistan",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9837448596954346,
+          "start": 195,
+          "end": 203
+        },
+        {
+          "text": "PKR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.8675126433372498,
+          "start": 205,
+          "end": 208
+        },
+        {
+          "text": "Rail travel",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.9070656895637512,
+          "start": 300,
+          "end": 311
+        },
+        {
+          "text": "rail journeys",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.8468384146690369,
+          "start": 357,
+          "end": 370
+        },
+        {
+          "text": "3 hours",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.858789324760437,
+          "start": 377,
+          "end": 384
+        },
+        {
+          "text": "rail journeys",
+          "entity_type": "TRANSPORT_MODE",
+          "gliner_label": "transport mode",
+          "score": 0.80585777759552,
+          "start": 415,
+          "end": 428
+        },
+        {
+          "text": "3 hours",
+          "entity_type": "DURATION",
+          "gliner_label": "duration",
+          "score": 0.7280240058898926,
+          "start": 432,
+          "end": 439
+        },
+        {
+          "text": "manager approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.7655652761459351,
+          "start": 478,
+          "end": 494
+        },
+        {
+          "text": "Booking channels",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.6746512055397034,
+          "start": 515,
+          "end": 531
+        },
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.7019001841545105,
+          "start": 534,
+          "end": 543
+        }
+      ]
+    },
+    {
+      "chunk_id": "travel_policy__chunk_003",
+      "document_index": 4,
+      "chunk_index": 3,
+      "source": "../dataset/travel_policy.md",
+      "text": "Employees should use the approved corporate travel provider when it is available for the destination.\n\nBookings made outside the approved channel must include a short justification when the expense claim is submitted.\n\nExact identifier note.\n\nThis policy is identified as HR-TRV-0173. Questions referring to \"TRV-0173\", \"HR-TRV-0173\", or \"travel policy 0173\" refer to this policy.\n\nExamples.\n\nA hotel in Germany costing EUR 155 per night is within the 2026 standard limit.\nA Germany hotel costing EUR 145 per night was above the standard 2025 limit but is below the 2026 limit.\nA Spain hotel costing EUR 158 per night in 2026 requires advance approval because the standard limit is EUR 150.",
+      "entities": [
+        {
+          "text": "Employees",
+          "entity_type": "EMPLOYEE_TYPE",
+          "gliner_label": "employee type",
+          "score": 0.6067985892295837,
+          "start": 0,
+          "end": 9
+        },
+        {
+          "text": "approved corporate travel provider",
+          "entity_type": "BUSINESS_TRAVEL",
+          "gliner_label": "business travel",
+          "score": 0.5680773258209229,
+          "start": 25,
+          "end": 59
+        },
+        {
+          "text": "HR-TRV-0173",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.7606161832809448,
+          "start": 272,
+          "end": 283
+        },
+        {
+          "text": "HR-TRV-0173",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6910743117332458,
+          "start": 321,
+          "end": 332
+        },
+        {
+          "text": "travel policy 0173",
+          "entity_type": "POLICY",
+          "gliner_label": "policy",
+          "score": 0.6682133674621582,
+          "start": 339,
+          "end": 357
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.9600635170936584,
+          "start": 404,
+          "end": 411
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9746583104133606,
+          "start": 420,
+          "end": 423
+        },
+        {
+          "text": "standard limit",
+          "entity_type": "LIMIT",
+          "gliner_label": "limit",
+          "score": 0.5551554560661316,
+          "start": 457,
+          "end": 471
+        },
+        {
+          "text": "Germany",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.969504177570343,
+          "start": 475,
+          "end": 482
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9866303205490112,
+          "start": 497,
+          "end": 500
+        },
+        {
+          "text": "standard 2025 limit",
+          "entity_type": "LIMIT",
+          "gliner_label": "limit",
+          "score": 0.5611857771873474,
+          "start": 529,
+          "end": 548
+        },
+        {
+          "text": "Spain",
+          "entity_type": "COUNTRY",
+          "gliner_label": "country",
+          "score": 0.8481942415237427,
+          "start": 580,
+          "end": 585
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.982673168182373,
+          "start": 600,
+          "end": 603
+        },
+        {
+          "text": "2026",
+          "entity_type": "DATE",
+          "gliner_label": "date",
+          "score": 0.8054965138435364,
+          "start": 621,
+          "end": 625
+        },
+        {
+          "text": "advance approval",
+          "entity_type": "APPROVAL_REQUIREMENT",
+          "gliner_label": "approval requirement",
+          "score": 0.6821699738502502,
+          "start": 635,
+          "end": 651
+        },
+        {
+          "text": "standard limit",
+          "entity_type": "LIMIT",
+          "gliner_label": "limit",
+          "score": 0.7147116661071777,
+          "start": 664,
+          "end": 678
+        },
+        {
+          "text": "EUR",
+          "entity_type": "CURRENCY",
+          "gliner_label": "currency",
+          "score": 0.9665605425834656,
+          "start": 682,
+          "end": 685
+        }
+      ]
+    }
+  ]
+}
