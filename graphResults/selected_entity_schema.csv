@@ -1,26 +1,26 @@
-entity_type,source_clusters,selected_values,review_note
-MONEY_AMOUNT,"0,29","PKR 6,000 | PKR 6,500 | PKR 26,000 | PKR 32,000 | EUR 145 | EUR 150",Merged money values from the PKR cluster and manually split mixed cluster 29.
-DURATION,"1,7,8,22,23",6 hour | more than 6 hour | under 3 hour | 3 hour | week | up to 4 consecutive week | at least 4 week | one week | up to 8 week | only 8 month | 18 month | at least 12 month | 30 work day | consecutive working day | 5 consecutive working day | 24 working day | 30 calendar day | contract working day | 30 day | at least 3 day | up to 3 day | 3 day | at least 2 day | up to 2 day,"Merged several HDBSCAN clusters representing durations in hours, weeks, months and days."
-ORGANIZATION,3,FakeCompanyABC,Cluster was only partly useful; retained the actual organization name.
-LEAVE_RULE,4,carry-forward leave | carry-forward | remain carry-forward leave | carry-forward rule,
-APPROVAL_REQUIREMENT,5,approval | manager approval | director-level approval | additional approval | advance approval | HR and manager approval | prior written approval,Removed weak/fractured candidates from the original cluster.
-LEAVE_CONCEPT,6,leave | paid leave | leave request | leave interaction | parental leave | annual-leave entitlement | annual leave policy | statutory parental-leave right | leave balance,
-POLICY,10,policy | current policy,Removed incomplete phrase fragments.
-WORK_ARRANGEMENT,11,remote work | temporary remote work | remote-work arrangement | cross-border remote work,
-REMOTE_WORK_ALLOWANCE,12,remote-work allowance | standard remote-work allowance | additional remote-work allowance,
-BUSINESS_TRAVEL,13,business travel | approved business travel,Kept travel concepts; excluded the policy-title variant from the value set.
-DATE,14,1 January 2025 | 1 January 2026 | 31 December 2025 | 31 March,Removed 'transition day' because it is not a calendar date.
-TIME_PERIOD,15,calendar year | following calendar year | following year | annual | year-end,
-TIME_CONSTRAINT,16,scheduled duration | statutory notice period | submission deadline | reimbursement timing,Removed weak contextual phrase 'unreasonable delay'.
-LIMIT,17,limit | meal limit | standard limit | standard maximum reimbursable meal expense,Removed incomplete phrase 'maximum of'.
-HOTEL_RATE_LIMIT,18,hotel room-rate limit | maximum room rate | room rate | allowable hotel rate | maximum reimbursable room rate | hotel limit | nightly hotel limit,
-EXPENSE_CONCEPT,19,expense | expense claim | taxi expense | individual expense | lower-value expense | ride-hail expense | reasonable public-transport expense | claim,
-JOB_ROLE,20,direct manager | manager | department director,
-ENTITLEMENT,21,statutory entitlement | entitlement | greater entitlement | statutory right,Moved away the requirement-like term from this entity family.
-REQUIREMENT,24,different requirement | team requirement | role requirement | security requirement,
-EMPLOYEE_TYPE,25,full-time employee | part-time employee | eligible full-time employee,Removed generic 'work' and other weak candidates.
-COMPANY_RESOURCE,26,company device | company-managed device,Cluster was partly useful; kept only actual company resources.
-EXCEPTION,27,temporary exception | specific temporary exception | exception,
-TRANSPORT_MODE,28,air travel | rail travel | rail journey | flight | international travel | public transport,"Removed 'destination', which is not a transport mode."
-COUNTRY,29,Germany | Belgium | Spain,Manually split from mixed cluster 29.
-CURRENCY,29,EUR,Manually split from mixed cluster 29.
+entity_type,source_clusters,selected_values,review_note,
+MONEY_AMOUNT,"0,29","PKR 6,000 | PKR 6,500 | PKR 26,000 | PKR 32,000 | EUR 145 | EUR 150",Merged money values from the PKR cluster and manually split mixed cluster 29.,
+DURATION,"1,7,8,22,23",6 hour | more than 6 hour | under 3 hour | 3 hour | week | up to 4 consecutive week | at least 4 week | one week | up to 8 week | only 8 month | 18 month | at least 12 month | 30 work day | consecutive working day | 5 consecutive working day | 24 working day | 30 calendar day | contract working day | 30 day | at least 3 day | up to 3 day | 3 day | at least 2 day | up to 2 day,"Merged several HDBSCAN clusters representing durations in hours, weeks, months and days.",
+ORGANIZATION,3,FakeCompanyABC,Cluster was only partly useful, retained the actual organization name.
+LEAVE_RULE,4,carry-forward leave | carry-forward | remain carry-forward leave | carry-forward rule,,
+APPROVAL_REQUIREMENT,5,approval | manager approval | director-level approval | additional approval | advance approval | HR and manager approval | prior written approval,Removed weak/fractured candidates from the original cluster.,
+LEAVE_CONCEPT,6,leave | paid leave | leave request | leave interaction | parental leave | annual-leave entitlement | annual leave policy | statutory parental-leave right | leave balance,,
+POLICY,10,policy | current policy,Removed incomplete phrase fragments.,
+WORK_ARRANGEMENT,11,remote work | temporary remote work | remote-work arrangement | cross-border remote work,,
+REMOTE_WORK_ALLOWANCE,12,remote-work allowance | standard remote-work allowance | additional remote-work allowance,,
+BUSINESS_TRAVEL,13,business travel | approved business travel,Kept travel concepts, excluded the policy-title variant from the value set.
+DATE,14,1 January 2025 | 1 January 2026 | 31 December 2025 | 31 March,Removed 'transition day' because it is not a calendar date.,
+TIME_PERIOD,15,calendar year | following calendar year | following year | annual | year-end,,
+TIME_CONSTRAINT,16,scheduled duration | statutory notice period | submission deadline | reimbursement timing,Removed weak contextual phrase 'unreasonable delay'.,
+LIMIT,17,limit | meal limit | standard limit | standard maximum reimbursable meal expense,Removed incomplete phrase 'maximum of'.,
+HOTEL_RATE_LIMIT,18,hotel room-rate limit | maximum room rate | room rate | allowable hotel rate | maximum reimbursable room rate | hotel limit | nightly hotel limit,,
+EXPENSE_CONCEPT,19,expense | expense claim | taxi expense | individual expense | lower-value expense | ride-hail expense | reasonable public-transport expense | claim,,
+JOB_ROLE,20,direct manager | manager | department director,,
+ENTITLEMENT,21,statutory entitlement | entitlement | greater entitlement | statutory right,Moved away the requirement-like term from this entity family.,
+REQUIREMENT,24,different requirement | team requirement | role requirement | security requirement,,
+EMPLOYEE_TYPE,25,full-time employee | part-time employee | eligible full-time employee,Removed generic 'work' and other weak candidates.,
+COMPANY_RESOURCE,26,company device | company-managed device,Cluster was partly useful, kept only actual company resources.
+EXCEPTION,27,temporary exception | specific temporary exception | exception,,
+TRANSPORT_MODE,28,air travel | rail travel | rail journey | flight | international travel | public transport,"Removed 'destination', which is not a transport mode.",
+COUNTRY,29,Germany | Belgium | Spain | Pakistan,Manually split from mixed cluster 29.,
+CURRENCY,29,EUR | PKR,Manually split from mixed cluster 29.,
