@@ -4,7 +4,7 @@ A fully local Retrieval-Augmented Generation (RAG) practice project built around
 
 All company names, policies, questions, answers, and data in this repository are **completely fictional** and exist only for learning and experimentation.
 
-## Project Status - 25 August 2026
+## Project Status - 26 August 2026
 
 The **classical RAG stage is complete** for this repository.
 
@@ -23,7 +23,34 @@ The project now includes:
 - comparison of retrieval-pipeline effects and judge disagreement
 - manual validation on 5 questions, where I compared both judges against my own faithfulness and factual-correctness judgments
 
-The next stage of the repository will start at **08** and add **GraphRAG / Neo4j** using the same fictional policies and benchmark questions so that graph-based retrieval can be compared with the existing RAG approaches.
+The **GraphRAG stage has now started** with the `08` source-file series.
+
+The current `08.1` milestone focuses on **entity-schema discovery before graph construction**. Instead of defining all entity types manually from the beginning, candidate concepts are discovered from the policy corpus, grouped semantically, and then manually reviewed.
+
+```text
+HR Policies -> Clean + Chunk (700/120) -> spaCy NER + Noun Phrases -> Normalize/Deduplicate -> Nomic Embeddings (768-D) -> PCA (30-D) -> HDBSCAN -> Manual Keep/Merge/Split/Reject -> Selected Entity Schema
+```
+
+After manual review, **25 entity types** were selected. The complete list of selected entity types, their source clusters, and the values assigned to each type is stored in:
+
+```text
+graphResults/entity_schema_discovery/selected_entity_schema.csv
+```
+
+Supporting analysis for `08.1` is also available in:
+
+```text
+graphResults/entity_schema_discovery/
+├── clusters_pca.png
+├── cluster_size_summary.png
+├── cluster_lookup.csv
+├── entity_schema_manual_review.csv
+└── selected_entity_schema.csv
+```
+
+`cluster_lookup.csv` contains the automatically discovered HDBSCAN groups, while `entity_schema_manual_review.csv` records the manual **keep / merge / split / reject** decisions. `selected_entity_schema.csv` is the clean final output of the `08.1` schema-discovery stage.
+
+The next step is `08.2`: pass the reviewed entity-type labels together with the original document chunks to **GLiNER** for domain-specific entity extraction. **Relationships and Neo4j graph construction have not been added yet.**
 
 ---
 
