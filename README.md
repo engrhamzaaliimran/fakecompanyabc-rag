@@ -1,4 +1,4 @@
-**# FakeCompanyABC RAG
+# FakeCompanyABC RAG
 
 A fully local Retrieval-Augmented Generation (RAG) practice project built around fictional HR policies. I used the project to revisit RAG from first principles, measure retrieval instead of only looking at final answers, progressively improve the pipeline, and then evaluate the end-to-end system with both a local LLM judge and a stronger secondary judge.. I also wanted to keep the project completely free, so I deliberately avoided paid APIs and stayed with local, open-source tools and models throughout.
 
