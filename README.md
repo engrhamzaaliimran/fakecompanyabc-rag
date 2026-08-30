@@ -1,8 +1,25 @@
 # FakeCompanyABC RAG
 
-A fully local Retrieval-Augmented Generation (RAG) practice project built around fictional HR policies. I used the project to revisit RAG from first principles, measure retrieval instead of only looking at final answers, progressively improve the pipeline, and then evaluate the end-to-end system with both a local LLM judge using RAGAS and a stronger secondary judge i.e. Chatgpt. I also wanted to keep the project completely free, so I deliberately avoided paid APIs and stayed with local, open-source tools and models throughout.
+A Retrieval-Augmented Generation (RAG) practice project built around completely fictional HR policies dataset. I did the project to revisit RAG from first principles, measure retrieval instead of only looking at final answers, progressively improve the pipeline, and then evaluate the end-to-end system with both a local LLM judge using RAGAS and a stronger secondary judge i.e. Chatgpt. I also wanted to keep the project completely free, so I deliberately avoided paid APIs and stayed with local, open-source tools and models throughout.
 
-All company names, policies, questions, answers, and data in this repository are **completely fictional** and exist only for learning and experimentation.
+All company names, policies, questions, answers, and data in this repository are Chatgpt generated **completely fictional** and exist only for learning and experimentation.
+
+
+## Live Project Pages
+
+For a more visual overview of the project progression, I also maintain three standalone project pages on my website:
+
+| Page | Purpose |
+|---|---|
+| **[Classifcal / Traditional RAG Research](https://engrhamzaaliimran.github.io/traditional-rag.html)** | Visual walkthrough of the classical RAG experiments, retrieval benchmarks, chunking study, TF-IDF routing, reranking, generation and evaluation results. |
+| **[GraphRAG Research](https://engrhamzaaliimran.github.io/graphrag.html)** | Visual walkthrough of the GraphRAG work from entity-schema discovery through GLiNER extraction and validation, with relationship extraction shown as the next stage. |
+| **[Interactive GLiNER Entity Validation](https://engrhamzaaliimran.github.io/gliner_entity_validation.html)** | Interactive full-corpus entity viewer with source filtering, entity-type filtering and confidence-threshold control. |
+
+**[Research portfolio home](https://engrhamzaaliimran.github.io/)**
+
+The website pages are the presentation layer for the project; the code, datasets, evaluation artifacts and reproducible pipeline remain in this repository.
+
+---
 
 ## Project Status - 30 August 2026
 
@@ -112,6 +129,8 @@ This makes it possible to inspect **coverage, span boundaries, entity-type assig
 
 **[Open the interactive entity validation report](https://engrhamzaaliimran.github.io/gliner_entity_validation.html)**
 
+**[Open the GraphRAG research page](https://engrhamzaaliimran.github.io/graphrag.html)**
+
 [View the HTML file in the repository](graphResults/gliner_entity_validation.html)
 
 The validation workflow is:
@@ -159,6 +178,8 @@ The current focus is **entity-extraction validation and confidence-threshold ana
 ---
 
 ## Final Classical RAG Architecture
+
+**[Open the Traditional RAG research page](https://engrhamzaaliimran.github.io/traditional-rag.html)**
 
 The practical pipeline selected after the retrieval experiments is:
 
