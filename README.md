@@ -11,8 +11,8 @@ For a more visual overview of the project progression, I also maintain three sta
 
 | Page | Purpose |
 |---|---|
-| **[Classifcal / Traditional RAG Research](https://engrhamzaaliimran.github.io/traditional-rag.html)** | Visual walkthrough of the classical RAG experiments, retrieval benchmarks, chunking study, TF-IDF routing, reranking, generation and evaluation results. |
-| **[GraphRAG Research](https://engrhamzaaliimran.github.io/graphrag.html)** | Visual walkthrough of the GraphRAG work from entity-schema discovery through GLiNER extraction and validation, with relationship extraction shown as the next stage. |
+| **[Developed Classifcal / Traditional RAG Pipeline](https://engrhamzaaliimran.github.io/traditional-rag.html)** | Visual walkthrough of the classical RAG experiments, retrieval benchmarks, chunking study, TF-IDF routing, reranking, generation and evaluation results. |
+| **[Developed GraphRAG Pipeline](https://engrhamzaaliimran.github.io/graphrag.html)** | Visual walkthrough of the GraphRAG work from entity-schema discovery through GLiNER extraction and validation, with relationship extraction shown as the next stage. |
 | **[Interactive GLiNER Entity Validation](https://engrhamzaaliimran.github.io/gliner_entity_validation.html)** | Interactive full-corpus entity viewer with source filtering, entity-type filtering and confidence-threshold control. |
 
 **[Research portfolio home](https://engrhamzaaliimran.github.io/)**
