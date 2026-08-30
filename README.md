@@ -110,7 +110,7 @@ This makes it possible to inspect **coverage, span boundaries, entity-type assig
 
 ### Interactive GLiNER Entity Validation
 
-**[Open the interactive entity validation report](https://engrhamzaaliimran.github.io/fakecompanyabc-rag/graphResults/gliner_entity_validation.html)**
+**[Open the interactive entity validation report](https://engrhamzaaliimran.github.io/gliner_entity_validation.html)**
 
 [View the HTML file in the repository](graphResults/gliner_entity_validation.html)
 
