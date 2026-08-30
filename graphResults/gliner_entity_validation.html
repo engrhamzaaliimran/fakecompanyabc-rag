@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLiNER Entity Validation</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --text: #18212f;
+    --muted: #667085;
+    --border: #d9dee7;
+    --accent: #315efb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 28px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .stat .label {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .stat .value {
+    font-size: 21px;
+    font-weight: 700;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .sidebar {
+    min-width: 0;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .panel h2 {
+    font-size: 15px;
+    margin: 0 0 12px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 12px 0 5px;
+  }
+
+  select, input[type="range"] {
+    width: 100%;
+  }
+
+  select {
+    padding: 9px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+  }
+
+  .threshold-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #thresholdValue {
+    width: 42px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .type-row {
+    display: grid;
+    grid-template-columns: 115px 1fr 30px;
+    gap: 8px;
+    align-items: center;
+    margin: 7px 0;
+    font-size: 11px;
+  }
+
+  .type-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bar-wrap {
+    height: 7px;
+    background: #eceff3;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .bar {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .count {
+    text-align: right;
+    color: var(--muted);
+  }
+
+  .main {
+    min-width: 0;
+  }
+
+  .results-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 9px;
+  }
+
+  #visibleCount {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .chunk-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .chunk-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .source {
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  .badge {
+    color: var(--muted);
+  }
+
+  .chunk-text {
+    padding: 18px;
+    line-height: 2.15;
+    white-space: pre-wrap;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+  }
+
+  mark.entity {
+    --hue: 210;
+    position: relative;
+    display: inline;
+    background: hsl(var(--hue) 85% 88%);
+    color: inherit;
+    border-bottom: 2px solid hsl(var(--hue) 55% 48%);
+    border-radius: 3px;
+    padding: 1px 2px;
+    margin: 0 1px;
+  }
+
+  .entity-tag {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.4;
+    vertical-align: middle;
+    background: hsl(var(--hue) 55% 48%);
+    color: white;
+    white-space: nowrap;
+  }
+
+  mark.entity.filtered-out {
+    background: transparent;
+    border-bottom-color: transparent;
+  }
+
+  mark.entity.filtered-out .entity-tag {
+    display: none;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .note {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 850px) {
+    .page { padding: 14px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>GLiNER Entity Validation</h1>
+  <div class="subtitle">
+    Inspect entity boundaries, entity types, confidence and document coverage directly in source text.
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Chunks</div>
+      <div class="value">20</div>
+    </div>
+    <div class="stat">
+      <div class="label">Displayed entities</div>
+      <div class="value">361</div>
+    </div>
+    <div class="stat">
+      <div class="label">Entity types</div>
+      <div class="value">25</div>
+    </div>
+    <div class="stat">
+      <div class="label">Mean confidence</div>
+      <div class="value">0.586</div>
+    </div>
+    <div class="stat">
+      <div class="label">Confidence range</div>
+      <div class="value">0.20–0.99</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="panel">
+        <h2>Filters</h2>
+
+        <label for="sourceFilter">Source document</label>
+        <select id="sourceFilter">
+          <option value="">All documents</option>
+          <option value="../dataset/annual_leave.md">annual_leave.md (73)</option>
+<option value="../dataset/expense_policy.md">expense_policy.md (59)</option>
+<option value="../dataset/parental_leave.md">parental_leave.md (61)</option>
+<option value="../dataset/remote_work.md">remote_work.md (74)</option>
+<option value="../dataset/travel_policy.md">travel_policy.md (94)</option>
+        </select>
+
+        <label for="typeFilter">Entity type</label>
+        <select id="typeFilter">
+          <option value="">All entity types</option>
+          <option value="APPROVAL_REQUIREMENT">APPROVAL_REQUIREMENT (19)</option>
+<option value="BUSINESS_TRAVEL">BUSINESS_TRAVEL (14)</option>
+<option value="COMPANY_RESOURCE">COMPANY_RESOURCE (2)</option>
+<option value="COUNTRY">COUNTRY (38)</option>
+<option value="CURRENCY">CURRENCY (22)</option>
+<option value="DATE">DATE (12)</option>
+<option value="DURATION">DURATION (25)</option>
+<option value="EMPLOYEE_TYPE">EMPLOYEE_TYPE (38)</option>
+<option value="ENTITLEMENT">ENTITLEMENT (9)</option>
+<option value="EXCEPTION">EXCEPTION (7)</option>
+<option value="EXPENSE_CONCEPT">EXPENSE_CONCEPT (12)</option>
+<option value="HOTEL_RATE_LIMIT">HOTEL_RATE_LIMIT (1)</option>
+<option value="JOB_ROLE">JOB_ROLE (9)</option>
+<option value="LEAVE_CONCEPT">LEAVE_CONCEPT (26)</option>
+<option value="LEAVE_RULE">LEAVE_RULE (11)</option>
+<option value="LIMIT">LIMIT (20)</option>
+<option value="MONEY_AMOUNT">MONEY_AMOUNT (3)</option>
+<option value="ORGANIZATION">ORGANIZATION (15)</option>
+<option value="POLICY">POLICY (34)</option>
+<option value="REMOTE_WORK_ALLOWANCE">REMOTE_WORK_ALLOWANCE (11)</option>
+<option value="REQUIREMENT">REQUIREMENT (5)</option>
+<option value="TIME_CONSTRAINT">TIME_CONSTRAINT (2)</option>
+<option value="TIME_PERIOD">TIME_PERIOD (4)</option>
+<option value="TRANSPORT_MODE">TRANSPORT_MODE (11)</option>
+<option value="WORK_ARRANGEMENT">WORK_ARRANGEMENT (11)</option>
+        </select>
+
+        <label for="threshold">Minimum confidence</label>
+        <div class="threshold-row">
+          <input id="threshold" type="range" min="0" max="1" step="0.01"
+                 value="0.00">
+          <span id="thresholdValue">0.00</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Entity-type distribution</h2>
+        
+        <div class="type-row">
+          <span class="type-name">COUNTRY</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:100.0%"></span>
+          </span>
+          <span class="count">38</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">EMPLOYEE_TYPE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:100.0%"></span>
+          </span>
+          <span class="count">38</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">POLICY</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:89.5%"></span>
+          </span>
+          <span class="count">34</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">LEAVE_CONCEPT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:68.4%"></span>
+          </span>
+          <span class="count">26</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">DURATION</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:65.8%"></span>
+          </span>
+          <span class="count">25</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">CURRENCY</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:57.9%"></span>
+          </span>
+          <span class="count">22</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">LIMIT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:52.6%"></span>
+          </span>
+          <span class="count">20</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">APPROVAL_REQUIREMENT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:50.0%"></span>
+          </span>
+          <span class="count">19</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">ORGANIZATION</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:39.5%"></span>
+          </span>
+          <span class="count">15</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">BUSINESS_TRAVEL</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:36.8%"></span>
+          </span>
+          <span class="count">14</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">DATE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:31.6%"></span>
+          </span>
+          <span class="count">12</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">EXPENSE_CONCEPT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:31.6%"></span>
+          </span>
+          <span class="count">12</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">LEAVE_RULE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:28.9%"></span>
+          </span>
+          <span class="count">11</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">REMOTE_WORK_ALLOWANCE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:28.9%"></span>
+          </span>
+          <span class="count">11</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">TRANSPORT_MODE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:28.9%"></span>
+          </span>
+          <span class="count">11</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">WORK_ARRANGEMENT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:28.9%"></span>
+          </span>
+          <span class="count">11</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">ENTITLEMENT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:23.7%"></span>
+          </span>
+          <span class="count">9</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">JOB_ROLE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:23.7%"></span>
+          </span>
+          <span class="count">9</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">EXCEPTION</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:18.4%"></span>
+          </span>
+          <span class="count">7</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">REQUIREMENT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:13.2%"></span>
+          </span>
+          <span class="count">5</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">TIME_PERIOD</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:10.5%"></span>
+          </span>
+          <span class="count">4</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">MONEY_AMOUNT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:7.9%"></span>
+          </span>
+          <span class="count">3</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">COMPANY_RESOURCE</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:5.3%"></span>
+          </span>
+          <span class="count">2</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">TIME_CONSTRAINT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:5.3%"></span>
+          </span>
+          <span class="count">2</span>
+        </div>
+        
+
+        <div class="type-row">
+          <span class="type-name">HOTEL_RATE_LIMIT</span>
+          <span class="bar-wrap">
+            <span class="bar" style="width:2.6%"></span>
+          </span>
+          <span class="count">1</span>
+        </div>
+        
+      </div>
+
+      <div class="panel note">
+        Validation tip: inspect three things independently:
+        <strong>span boundary</strong>, <strong>entity type</strong>, and
+        <strong>confidence</strong>. A relation model cannot recover an entity
+        that was missed or mislabeled here.
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="results-head">
+        <strong>Annotated chunks</strong>
+        <span id="visibleCount"></span>
+      </div>
+      <div id="chunks">
+        
+        <section class="chunk-card"
+                 data-source="../dataset/annual_leave.md"
+                 data-entity-count="24">
+          <div class="chunk-meta">
+            <div>
+              <strong>annual_leave__chunk_000</strong>
+              <span class="source">annual_leave.md</span>
+            </div>
+            <span class="badge">24 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="ORGANIZATION" data-score="0.565560" title="ORGANIZATION • confidence 0.566"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.57</span></mark> <mark class="entity" data-type="POLICY" data-score="0.734521" title="POLICY • confidence 0.735"><span class="mention">Annual Leave Policy</span><span class="entity-tag">POLICY · 0.73</span></mark>.
+
+Purpose.
+
+This policy defines <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.354448" title="LEAVE_CONCEPT • confidence 0.354"><span class="mention">annual paid leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.35</span></mark>, <mark class="entity" data-type="LEAVE_RULE" data-score="0.604026" title="LEAVE_RULE • confidence 0.604"><span class="mention">carry-forward rules</span><span class="entity-tag">LEAVE_RULE · 0.60</span></mark>, and the process for requesting leave at <mark class="entity" data-type="ORGANIZATION" data-score="0.663242" title="ORGANIZATION • confidence 0.663"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.66</span></mark>.
+
+<mark class="entity" data-type="ENTITLEMENT" data-score="0.854479" title="ENTITLEMENT • confidence 0.854"><span class="mention">Annual leave entitlement</span><span class="entity-tag">ENTITLEMENT · 0.85</span></mark>.
+
+<mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.685269" title="LEAVE_CONCEPT • confidence 0.685"><span class="mention">Annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.69</span></mark> depends on the employee&#x27;s <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.459753" title="WORK_ARRANGEMENT • confidence 0.460"><span class="mention">contractual work location</span><span class="entity-tag">WORK_ARRANGEMENT · 0.46</span></mark>.
+
+<mark class="entity" data-type="COUNTRY" data-score="0.979138" title="COUNTRY • confidence 0.979"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.98</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.944238" title="EMPLOYEE_TYPE • confidence 0.944"><span class="mention">Full-time employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.94</span></mark> whose <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.409479" title="WORK_ARRANGEMENT • confidence 0.409"><span class="mention">contractual work location</span><span class="entity-tag">WORK_ARRANGEMENT · 0.41</span></mark> is <mark class="entity" data-type="COUNTRY" data-score="0.951200" title="COUNTRY • confidence 0.951"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.95</span></mark> receive 30 working days of paid <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.450758" title="LEAVE_CONCEPT • confidence 0.451"><span class="mention">annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.45</span></mark> per <mark class="entity" data-type="TIME_PERIOD" data-score="0.398439" title="TIME_PERIOD • confidence 0.398"><span class="mention">calendar year</span><span class="entity-tag">TIME_PERIOD · 0.40</span></mark>.
+
+<mark class="entity" data-type="COUNTRY" data-score="0.976105" title="COUNTRY • confidence 0.976"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.98</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.948066" title="EMPLOYEE_TYPE • confidence 0.948"><span class="mention">Full-time employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.95</span></mark> whose <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.419534" title="WORK_ARRANGEMENT • confidence 0.420"><span class="mention">contractual work location</span><span class="entity-tag">WORK_ARRANGEMENT · 0.42</span></mark> is <mark class="entity" data-type="COUNTRY" data-score="0.962963" title="COUNTRY • confidence 0.963"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.96</span></mark> receive 24 working days of paid <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.489959" title="LEAVE_CONCEPT • confidence 0.490"><span class="mention">annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.49</span></mark> per <mark class="entity" data-type="TIME_PERIOD" data-score="0.332213" title="TIME_PERIOD • confidence 0.332"><span class="mention">calendar year</span><span class="entity-tag">TIME_PERIOD · 0.33</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.947026" title="EMPLOYEE_TYPE • confidence 0.947"><span class="mention">Part-time employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.95</span></mark> receive <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.646781" title="LEAVE_CONCEPT • confidence 0.647"><span class="mention">annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.65</span></mark> on a <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.239583" title="LEAVE_CONCEPT • confidence 0.240"><span class="mention">pro-rata basis</span><span class="entity-tag">LEAVE_CONCEPT · 0.24</span></mark> according to their contracted working days.
+
+<mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.439622" title="LEAVE_CONCEPT • confidence 0.440"><span class="mention">Carry-forward</span><span class="entity-tag">LEAVE_CONCEPT · 0.44</span></mark>.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/annual_leave.md"
+                 data-entity-count="17">
+          <div class="chunk-meta">
+            <div>
+              <strong>annual_leave__chunk_001</strong>
+              <span class="source">annual_leave.md</span>
+            </div>
+            <span class="badge">17 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.279283" title="LEAVE_CONCEPT • confidence 0.279"><span class="mention">Carry-forward</span><span class="entity-tag">LEAVE_CONCEPT · 0.28</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.670682" title="EMPLOYEE_TYPE • confidence 0.671"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.67</span></mark> may carry forward a <mark class="entity" data-type="LIMIT" data-score="0.233698" title="LIMIT • confidence 0.234"><span class="mention">maximum of 5 unused annual-leave days</span><span class="entity-tag">LIMIT · 0.23</span></mark> into the following calendar year.
+
+<mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.363795" title="LEAVE_CONCEPT • confidence 0.364"><span class="mention">Carried-forward leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.36</span></mark> must normally be used by <mark class="entity" data-type="DATE" data-score="0.827711" title="DATE • confidence 0.828"><span class="mention">31 March</span><span class="entity-tag">DATE · 0.83</span></mark> of the following year. Any remaining <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.244859" title="LEAVE_CONCEPT • confidence 0.245"><span class="mention">carried-forward leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.24</span></mark> expires after that date unless <mark class="entity" data-type="ORGANIZATION" data-score="0.688221" title="ORGANIZATION • confidence 0.688"><span class="mention">HR</span><span class="entity-tag">ORGANIZATION · 0.69</span></mark> has approved an <mark class="entity" data-type="EXCEPTION" data-score="0.225695" title="EXCEPTION • confidence 0.226"><span class="mention">exception</span><span class="entity-tag">EXCEPTION · 0.23</span></mark> in writing.
+
+<mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.506426" title="LEAVE_CONCEPT • confidence 0.506"><span class="mention">Leave requests</span><span class="entity-tag">LEAVE_CONCEPT · 0.51</span></mark>.
+
+<mark class="entity" data-type="LIMIT" data-score="0.312449" title="LIMIT • confidence 0.312"><span class="mention">Leave of 5 consecutive working days or fewer</span><span class="entity-tag">LIMIT · 0.31</span></mark> should normally be requested at least <mark class="entity" data-type="DURATION" data-score="0.288197" title="DURATION • confidence 0.288"><span class="mention">5 working days</span><span class="entity-tag">DURATION · 0.29</span></mark> in advance.
+
+<mark class="entity" data-type="LIMIT" data-score="0.244146" title="LIMIT • confidence 0.244"><span class="mention">Leave of more than 5 consecutive working days</span><span class="entity-tag">LIMIT · 0.24</span></mark> should normally be requested <mark class="entity" data-type="LIMIT" data-score="0.240372" title="LIMIT • confidence 0.240"><span class="mention">at least 3 weeks in advance</span><span class="entity-tag">LIMIT · 0.24</span></mark>.
+
+All <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.298579" title="LEAVE_CONCEPT • confidence 0.299"><span class="mention">annual-leave requests</span><span class="entity-tag">LEAVE_CONCEPT · 0.30</span></mark> require <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.578333" title="APPROVAL_REQUIREMENT • confidence 0.578"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.58</span></mark> from the employee&#x27;s <mark class="entity" data-type="JOB_ROLE" data-score="0.313141" title="JOB_ROLE • confidence 0.313"><span class="mention">direct manager</span><span class="entity-tag">JOB_ROLE · 0.31</span></mark>.
+
+<mark class="entity" data-type="LEAVE_RULE" data-score="0.321317" title="LEAVE_RULE • confidence 0.321"><span class="mention">Probation</span><span class="entity-tag">LEAVE_RULE · 0.32</span></mark>.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/annual_leave.md"
+                 data-entity-count="17">
+          <div class="chunk-meta">
+            <div>
+              <strong>annual_leave__chunk_002</strong>
+              <span class="source">annual_leave.md</span>
+            </div>
+            <span class="badge">17 entities</span>
+          </div>
+          <div class="chunk-text">All annual-leave requests require <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.762852" title="APPROVAL_REQUIREMENT • confidence 0.763"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.76</span></mark> from the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.638145" title="EMPLOYEE_TYPE • confidence 0.638"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.64</span></mark>&#x27;s direct manager.
+
+<mark class="entity" data-type="LEAVE_RULE" data-score="0.265825" title="LEAVE_RULE • confidence 0.266"><span class="mention">Probation</span><span class="entity-tag">LEAVE_RULE · 0.27</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.653159" title="EMPLOYEE_TYPE • confidence 0.653"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.65</span></mark> may request <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.435243" title="LEAVE_CONCEPT • confidence 0.435"><span class="mention">annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.44</span></mark> during probation, but <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.482679" title="APPROVAL_REQUIREMENT • confidence 0.483"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.48</span></mark> depends on <mark class="entity" data-type="POLICY" data-score="0.267817" title="POLICY • confidence 0.268"><span class="mention">business needs</span><span class="entity-tag">POLICY · 0.27</span></mark> and manager <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.357801" title="APPROVAL_REQUIREMENT • confidence 0.358"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.36</span></mark>. The <mark class="entity" data-type="ENTITLEMENT" data-score="0.857969" title="ENTITLEMENT • confidence 0.858"><span class="mention">annual entitlement</span><span class="entity-tag">ENTITLEMENT · 0.86</span></mark> itself is not reduced because an <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.744901" title="EMPLOYEE_TYPE • confidence 0.745"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.74</span></mark> is on probation.
+
+Important interpretation note.
+
+The <mark class="entity" data-type="ENTITLEMENT" data-score="0.850881" title="ENTITLEMENT • confidence 0.851"><span class="mention">annual entitlement</span><span class="entity-tag">ENTITLEMENT · 0.85</span></mark> is based on the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.737352" title="EMPLOYEE_TYPE • confidence 0.737"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.74</span></mark>&#x27;s <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.333996" title="WORK_ARRANGEMENT • confidence 0.334"><span class="mention">contractual work location</span><span class="entity-tag">WORK_ARRANGEMENT · 0.33</span></mark>, not <mark class="entity" data-type="ORGANIZATION" data-score="0.236921" title="ORGANIZATION • confidence 0.237"><span class="mention">nationality</span><span class="entity-tag">ORGANIZATION · 0.24</span></mark>, <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.209269" title="WORK_ARRANGEMENT • confidence 0.209"><span class="mention">citizenship</span><span class="entity-tag">WORK_ARRANGEMENT · 0.21</span></mark>, or the <mark class="entity" data-type="COUNTRY" data-score="0.719968" title="COUNTRY • confidence 0.720"><span class="mention">country</span><span class="entity-tag">COUNTRY · 0.72</span></mark> from which the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.614218" title="EMPLOYEE_TYPE • confidence 0.614"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.61</span></mark> happens to work temporarily.
+
+Examples.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/annual_leave.md"
+                 data-entity-count="15">
+          <div class="chunk-meta">
+            <div>
+              <strong>annual_leave__chunk_003</strong>
+              <span class="source">annual_leave.md</span>
+            </div>
+            <span class="badge">15 entities</span>
+          </div>
+          <div class="chunk-text">Examples.
+
+An <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.806556" title="EMPLOYEE_TYPE • confidence 0.807"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.81</span></mark> contracted in <mark class="entity" data-type="COUNTRY" data-score="0.942422" title="COUNTRY • confidence 0.942"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.94</span></mark> with <mark class="entity" data-type="DURATION" data-score="0.619686" title="DURATION • confidence 0.620"><span class="mention">8 unused days</span><span class="entity-tag">DURATION · 0.62</span></mark> at <mark class="entity" data-type="TIME_PERIOD" data-score="0.340984" title="TIME_PERIOD • confidence 0.341"><span class="mention">year-end</span><span class="entity-tag">TIME_PERIOD · 0.34</span></mark> may carry forward only <mark class="entity" data-type="DURATION" data-score="0.713518" title="DURATION • confidence 0.714"><span class="mention">5 days</span><span class="entity-tag">DURATION · 0.71</span></mark>.
+An <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.833557" title="EMPLOYEE_TYPE • confidence 0.834"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.83</span></mark> contracted in <mark class="entity" data-type="COUNTRY" data-score="0.929907" title="COUNTRY • confidence 0.930"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.93</span></mark> with <mark class="entity" data-type="DURATION" data-score="0.610921" title="DURATION • confidence 0.611"><span class="mention">3 unused days</span><span class="entity-tag">DURATION · 0.61</span></mark> may carry all <mark class="entity" data-type="DURATION" data-score="0.542823" title="DURATION • confidence 0.543"><span class="mention">3 days</span><span class="entity-tag">DURATION · 0.54</span></mark> forward.
+A <mark class="entity" data-type="COUNTRY" data-score="0.565223" title="COUNTRY • confidence 0.565"><span class="mention">Germany-based</span><span class="entity-tag">COUNTRY · 0.57</span></mark> <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.755029" title="EMPLOYEE_TYPE • confidence 0.755"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.76</span></mark> temporarily working from <mark class="entity" data-type="COUNTRY" data-score="0.909934" title="COUNTRY • confidence 0.910"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.91</span></mark> still follows the <mark class="entity" data-type="COUNTRY" data-score="0.958095" title="COUNTRY • confidence 0.958"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.96</span></mark> <mark class="entity" data-type="ENTITLEMENT" data-score="0.785702" title="ENTITLEMENT • confidence 0.786"><span class="mention">annual-leave entitlement</span><span class="entity-tag">ENTITLEMENT · 0.79</span></mark> unless the <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.345332" title="WORK_ARRANGEMENT • confidence 0.345"><span class="mention">employment contract</span><span class="entity-tag">WORK_ARRANGEMENT · 0.35</span></mark> is changed.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/expense_policy.md"
+                 data-entity-count="17">
+          <div class="chunk-meta">
+            <div>
+              <strong>expense_policy__chunk_000</strong>
+              <span class="source">expense_policy.md</span>
+            </div>
+            <span class="badge">17 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="ORGANIZATION" data-score="0.226576" title="ORGANIZATION • confidence 0.227"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.23</span></mark> <mark class="entity" data-type="POLICY" data-score="0.813974" title="POLICY • confidence 0.814"><span class="mention">Expense Reimbursement Policy</span><span class="entity-tag">POLICY · 0.81</span></mark>.
+
+<mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.238164" title="APPROVAL_REQUIREMENT • confidence 0.238"><span class="mention">Submission deadline</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.24</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.701673" title="EMPLOYEE_TYPE • confidence 0.702"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.70</span></mark> must normally submit <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.256611" title="EXPENSE_CONCEPT • confidence 0.257"><span class="mention">business-expense claims</span><span class="entity-tag">EXPENSE_CONCEPT · 0.26</span></mark> within <mark class="entity" data-type="DURATION" data-score="0.631801" title="DURATION • confidence 0.632"><span class="mention">30 calendar days</span><span class="entity-tag">DURATION · 0.63</span></mark> of the <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.222511" title="APPROVAL_REQUIREMENT • confidence 0.223"><span class="mention">expense date</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.22</span></mark>.
+
+Claims submitted after <mark class="entity" data-type="DURATION" data-score="0.420223" title="DURATION • confidence 0.420"><span class="mention">30 days</span><span class="entity-tag">DURATION · 0.42</span></mark> require an explanation and may require <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.531818" title="APPROVAL_REQUIREMENT • confidence 0.532"><span class="mention">additional approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.53</span></mark>.
+
+Receipts.
+
+A receipt is required for any individual expense above:
+
+<mark class="entity" data-type="CURRENCY" data-score="0.847110" title="CURRENCY • confidence 0.847"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.85</span></mark> 20 for expenses paid in <mark class="entity" data-type="CURRENCY" data-score="0.475305" title="CURRENCY • confidence 0.475"><span class="mention">euros</span><span class="entity-tag">CURRENCY · 0.48</span></mark>;
+<mark class="entity" data-type="CURRENCY" data-score="0.811170" title="CURRENCY • confidence 0.811"><span class="mention">PKR</span><span class="entity-tag">CURRENCY · 0.81</span></mark> 6,000 for expenses paid in <mark class="entity" data-type="CURRENCY" data-score="0.955387" title="CURRENCY • confidence 0.955"><span class="mention">Pakistani rupees</span><span class="entity-tag">CURRENCY · 0.96</span></mark>.
+
+For lower-value expenses without a receipt, the employee must still provide the <mark class="entity" data-type="DATE" data-score="0.581006" title="DATE • confidence 0.581"><span class="mention">date</span><span class="entity-tag">DATE · 0.58</span></mark>, <mark class="entity" data-type="MONEY_AMOUNT" data-score="0.324993" title="MONEY_AMOUNT • confidence 0.325"><span class="mention">amount</span><span class="entity-tag">MONEY_AMOUNT · 0.32</span></mark>, and <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.320430" title="EXPENSE_CONCEPT • confidence 0.320"><span class="mention">business purpose</span><span class="entity-tag">EXPENSE_CONCEPT · 0.32</span></mark>.
+
+Meals during <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.844418" title="BUSINESS_TRAVEL • confidence 0.844"><span class="mention">business travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.84</span></mark>.
+
+The standard maximum reimbursable meal expense per person is:</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/expense_policy.md"
+                 data-entity-count="24">
+          <div class="chunk-meta">
+            <div>
+              <strong>expense_policy__chunk_001</strong>
+              <span class="source">expense_policy.md</span>
+            </div>
+            <span class="badge">24 entities</span>
+          </div>
+          <div class="chunk-text">Meals during <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.738689" title="BUSINESS_TRAVEL • confidence 0.739"><span class="mention">business travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.74</span></mark>.
+
+The standard maximum reimbursable meal expense per person is:
+
+Location. <mark class="entity" data-type="LIMIT" data-score="0.414932" title="LIMIT • confidence 0.415"><span class="mention">Maximum per meal</span><span class="entity-tag">LIMIT · 0.41</span></mark>.
+<mark class="entity" data-type="COUNTRY" data-score="0.973222" title="COUNTRY • confidence 0.973"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.97</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.954979" title="CURRENCY • confidence 0.955"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.95</span></mark> 35.
+<mark class="entity" data-type="COUNTRY" data-score="0.939389" title="COUNTRY • confidence 0.939"><span class="mention">Belgium</span><span class="entity-tag">COUNTRY · 0.94</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.972490" title="CURRENCY • confidence 0.972"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.97</span></mark> 40.
+<mark class="entity" data-type="COUNTRY" data-score="0.971135" title="COUNTRY • confidence 0.971"><span class="mention">Spain</span><span class="entity-tag">COUNTRY · 0.97</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.971095" title="CURRENCY • confidence 0.971"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.97</span></mark> 35.
+<mark class="entity" data-type="COUNTRY" data-score="0.974635" title="COUNTRY • confidence 0.975"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.97</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.887010" title="CURRENCY • confidence 0.887"><span class="mention">PKR</span><span class="entity-tag">CURRENCY · 0.89</span></mark> 6,500.
+
+<mark class="entity" data-type="LIMIT" data-score="0.275372" title="LIMIT • confidence 0.275"><span class="mention">Alcoholic beverages</span><span class="entity-tag">LIMIT · 0.28</span></mark> are not reimbursable under the <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.227341" title="EXPENSE_CONCEPT • confidence 0.227"><span class="mention">standard meal allowance</span><span class="entity-tag">EXPENSE_CONCEPT · 0.23</span></mark>.
+
+<mark class="entity" data-type="COUNTRY" data-score="0.205717" title="COUNTRY • confidence 0.206"><span class="mention">Hotels</span><span class="entity-tag">COUNTRY · 0.21</span></mark>.
+
+<mark class="entity" data-type="HOTEL_RATE_LIMIT" data-score="0.687721" title="HOTEL_RATE_LIMIT • confidence 0.688"><span class="mention">Hotel room-rate limits</span><span class="entity-tag">HOTEL_RATE_LIMIT · 0.69</span></mark> are not defined by this policy.
+
+For <mark class="entity" data-type="LIMIT" data-score="0.515854" title="LIMIT • confidence 0.516"><span class="mention">hotel limits</span><span class="entity-tag">LIMIT · 0.52</span></mark>, <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.730483" title="EMPLOYEE_TYPE • confidence 0.730"><span class="mention">employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.73</span></mark> must use the current <mark class="entity" data-type="POLICY" data-score="0.744652" title="POLICY • confidence 0.745"><span class="mention">Business Travel Policy</span><span class="entity-tag">POLICY · 0.74</span></mark>, <mark class="entity" data-type="POLICY" data-score="0.624120" title="POLICY • confidence 0.624"><span class="mention">HR-TRV-0173</span><span class="entity-tag">POLICY · 0.62</span></mark>.
+
+This is intentional: the <mark class="entity" data-type="POLICY" data-score="0.592962" title="POLICY • confidence 0.593"><span class="mention">expense policy</span><span class="entity-tag">POLICY · 0.59</span></mark> defines how claims are submitted, while the <mark class="entity" data-type="POLICY" data-score="0.544706" title="POLICY • confidence 0.545"><span class="mention">travel policy</span><span class="entity-tag">POLICY · 0.54</span></mark> defines <mark class="entity" data-type="LIMIT" data-score="0.209008" title="LIMIT • confidence 0.209"><span class="mention">allowable hotel rates</span><span class="entity-tag">LIMIT · 0.21</span></mark>.
+
+<mark class="entity" data-type="TRANSPORT_MODE" data-score="0.911863" title="TRANSPORT_MODE • confidence 0.912"><span class="mention">Ground transportation</span><span class="entity-tag">TRANSPORT_MODE · 0.91</span></mark>.
+
+<mark class="entity" data-type="LIMIT" data-score="0.394271" title="LIMIT • confidence 0.394"><span class="mention">Reasonable public-transport expenses</span><span class="entity-tag">LIMIT · 0.39</span></mark> are reimbursable for approved <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.783259" title="BUSINESS_TRAVEL • confidence 0.783"><span class="mention">business travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.78</span></mark>.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/expense_policy.md"
+                 data-entity-count="9">
+          <div class="chunk-meta">
+            <div>
+              <strong>expense_policy__chunk_002</strong>
+              <span class="source">expense_policy.md</span>
+            </div>
+            <span class="badge">9 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="TRANSPORT_MODE" data-score="0.806336" title="TRANSPORT_MODE • confidence 0.806"><span class="mention">Ground transportation</span><span class="entity-tag">TRANSPORT_MODE · 0.81</span></mark>.
+
+<mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.702062" title="EXPENSE_CONCEPT • confidence 0.702"><span class="mention">Reasonable public-transport expenses</span><span class="entity-tag">EXPENSE_CONCEPT · 0.70</span></mark> are reimbursable for <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.583093" title="BUSINESS_TRAVEL • confidence 0.583"><span class="mention">approved business travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.58</span></mark>.
+
+<mark class="entity" data-type="TRANSPORT_MODE" data-score="0.346108" title="TRANSPORT_MODE • confidence 0.346"><span class="mention">Taxi</span><span class="entity-tag">TRANSPORT_MODE · 0.35</span></mark> or ride-hailing expenses are reimbursable when <mark class="entity" data-type="TRANSPORT_MODE" data-score="0.679743" title="TRANSPORT_MODE • confidence 0.680"><span class="mention">public transport</span><span class="entity-tag">TRANSPORT_MODE · 0.68</span></mark> is impractical, unavailable, or would create an unreasonable delay. The <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.237360" title="EXPENSE_CONCEPT • confidence 0.237"><span class="mention">business reason</span><span class="entity-tag">EXPENSE_CONCEPT · 0.24</span></mark> should be included in the expense claim.
+
+<mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.734112" title="EXPENSE_CONCEPT • confidence 0.734"><span class="mention">Personal purchases</span><span class="entity-tag">EXPENSE_CONCEPT · 0.73</span></mark>.
+
+<mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.763115" title="EXPENSE_CONCEPT • confidence 0.763"><span class="mention">Personal purchases</span><span class="entity-tag">EXPENSE_CONCEPT · 0.76</span></mark> are not reimbursable.
+
+If a receipt contains both business and personal items, only the business portion may be claimed.
+
+Reimbursement timing.
+
+<mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.693966" title="EXPENSE_CONCEPT • confidence 0.694"><span class="mention">Approved expenses</span><span class="entity-tag">EXPENSE_CONCEPT · 0.69</span></mark> are normally reimbursed with the next available payroll cycle after finance completes review.
+
+Examples.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/expense_policy.md"
+                 data-entity-count="9">
+          <div class="chunk-meta">
+            <div>
+              <strong>expense_policy__chunk_003</strong>
+              <span class="source">expense_policy.md</span>
+            </div>
+            <span class="badge">9 entities</span>
+          </div>
+          <div class="chunk-text">Examples.
+
+A <mark class="entity" data-type="CURRENCY" data-score="0.976785" title="CURRENCY • confidence 0.977"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.98</span></mark> 18 <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.228822" title="EXPENSE_CONCEPT • confidence 0.229"><span class="mention">taxi expense</span><span class="entity-tag">EXPENSE_CONCEPT · 0.23</span></mark> does not require a receipt under the <mark class="entity" data-type="LIMIT" data-score="0.446606" title="LIMIT • confidence 0.447"><span class="mention">general receipt threshold</span><span class="entity-tag">LIMIT · 0.45</span></mark>, but the <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.226197" title="LEAVE_CONCEPT • confidence 0.226"><span class="mention">business purpose</span><span class="entity-tag">LEAVE_CONCEPT · 0.23</span></mark> must still be recorded.
+A <mark class="entity" data-type="CURRENCY" data-score="0.979491" title="CURRENCY • confidence 0.979"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.98</span></mark> 28 <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.222030" title="EXPENSE_CONCEPT • confidence 0.222"><span class="mention">meal</span><span class="entity-tag">EXPENSE_CONCEPT · 0.22</span></mark> requires a receipt.
+A <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.397060" title="EXPENSE_CONCEPT • confidence 0.397"><span class="mention">hotel claim</span><span class="entity-tag">EXPENSE_CONCEPT · 0.40</span></mark> should be checked against <mark class="entity" data-type="POLICY" data-score="0.461093" title="POLICY • confidence 0.461"><span class="mention">HR-TRV-0173</span><span class="entity-tag">POLICY · 0.46</span></mark>, not against the <mark class="entity" data-type="LIMIT" data-score="0.453789" title="LIMIT • confidence 0.454"><span class="mention">meal limits</span><span class="entity-tag">LIMIT · 0.45</span></mark> in this document.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/parental_leave.md"
+                 data-entity-count="17">
+          <div class="chunk-meta">
+            <div>
+              <strong>parental_leave__chunk_000</strong>
+              <span class="source">parental_leave.md</span>
+            </div>
+            <span class="badge">17 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="ORGANIZATION" data-score="0.827853" title="ORGANIZATION • confidence 0.828"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.83</span></mark> <mark class="entity" data-type="POLICY" data-score="0.867057" title="POLICY • confidence 0.867"><span class="mention">Parental Leave and Return-to-Work Policy</span><span class="entity-tag">POLICY · 0.87</span></mark>.
+
+<mark class="entity" data-type="LEAVE_RULE" data-score="0.259750" title="LEAVE_RULE • confidence 0.260"><span class="mention">Scope</span><span class="entity-tag">LEAVE_RULE · 0.26</span></mark>.
+
+This document describes <mark class="entity" data-type="ORGANIZATION" data-score="0.880922" title="ORGANIZATION • confidence 0.881"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.88</span></mark>&#x27;s internal notification and return-to-work procedures related to <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.604740" title="LEAVE_CONCEPT • confidence 0.605"><span class="mention">parental leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.60</span></mark>.
+
+It does not replace <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.289096" title="LEAVE_CONCEPT • confidence 0.289"><span class="mention">statutory parental-leave rights</span><span class="entity-tag">LEAVE_CONCEPT · 0.29</span></mark>. Where <mark class="entity" data-type="POLICY" data-score="0.559230" title="POLICY • confidence 0.559"><span class="mention">local law</span><span class="entity-tag">POLICY · 0.56</span></mark> provides a <mark class="entity" data-type="ENTITLEMENT" data-score="0.493118" title="ENTITLEMENT • confidence 0.493"><span class="mention">greater entitlement</span><span class="entity-tag">ENTITLEMENT · 0.49</span></mark> or different <mark class="entity" data-type="REQUIREMENT" data-score="0.201751" title="REQUIREMENT • confidence 0.202"><span class="mention">requirement</span><span class="entity-tag">REQUIREMENT · 0.20</span></mark>, <mark class="entity" data-type="POLICY" data-score="0.514960" title="POLICY • confidence 0.515"><span class="mention">local law</span><span class="entity-tag">POLICY · 0.51</span></mark> takes precedence.
+
+<mark class="entity" data-type="LEAVE_RULE" data-score="0.277525" title="LEAVE_RULE • confidence 0.278"><span class="mention">Notification</span><span class="entity-tag">LEAVE_RULE · 0.28</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.720668" title="EMPLOYEE_TYPE • confidence 0.721"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.72</span></mark> should notify <mark class="entity" data-type="ORGANIZATION" data-score="0.291397" title="ORGANIZATION • confidence 0.291"><span class="mention">HR</span><span class="entity-tag">ORGANIZATION · 0.29</span></mark> and their <mark class="entity" data-type="JOB_ROLE" data-score="0.267565" title="JOB_ROLE • confidence 0.268"><span class="mention">manager</span><span class="entity-tag">JOB_ROLE · 0.27</span></mark> as early as reasonably possible when planning <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.524393" title="LEAVE_CONCEPT • confidence 0.524"><span class="mention">parental leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.52</span></mark>.
+
+Where a specific statutory notice period applies, the <mark class="entity" data-type="REQUIREMENT" data-score="0.347591" title="REQUIREMENT • confidence 0.348"><span class="mention">statutory requirement</span><span class="entity-tag">REQUIREMENT · 0.35</span></mark> must be followed.
+
+<mark class="entity" data-type="LEAVE_RULE" data-score="0.454012" title="LEAVE_RULE • confidence 0.454"><span class="mention">Company-paid transition days</span><span class="entity-tag">LEAVE_RULE · 0.45</span></mark>.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/parental_leave.md"
+                 data-entity-count="13">
+          <div class="chunk-meta">
+            <div>
+              <strong>parental_leave__chunk_001</strong>
+              <span class="source">parental_leave.md</span>
+            </div>
+            <span class="badge">13 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="ENTITLEMENT" data-score="0.425663" title="ENTITLEMENT • confidence 0.426"><span class="mention">Company-paid transition days</span><span class="entity-tag">ENTITLEMENT · 0.43</span></mark>.
+
+In addition to any <mark class="entity" data-type="ENTITLEMENT" data-score="0.497037" title="ENTITLEMENT • confidence 0.497"><span class="mention">statutory entitlement</span><span class="entity-tag">ENTITLEMENT · 0.50</span></mark>, eligible <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.775069" title="EMPLOYEE_TYPE • confidence 0.775"><span class="mention">full-time employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.78</span></mark> who have completed <mark class="entity" data-type="DURATION" data-score="0.265230" title="DURATION • confidence 0.265"><span class="mention">at least 12 months</span><span class="entity-tag">DURATION · 0.27</span></mark> of continuous service may receive up to 5 <mark class="entity" data-type="ENTITLEMENT" data-score="0.299838" title="ENTITLEMENT • confidence 0.300"><span class="mention">company-paid transition days</span><span class="entity-tag">ENTITLEMENT · 0.30</span></mark> associated with the birth or adoption of a child.
+
+These transition days are separate from <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.346744" title="LEAVE_CONCEPT • confidence 0.347"><span class="mention">annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.35</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.856380" title="EMPLOYEE_TYPE • confidence 0.856"><span class="mention">Part-time employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.86</span></mark> receive transition days on a pro-rata basis.
+
+<mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.938169" title="WORK_ARRANGEMENT • confidence 0.938"><span class="mention">Return-to-work arrangement</span><span class="entity-tag">WORK_ARRANGEMENT · 0.94</span></mark>.
+
+An employee returning from <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.316488" title="LEAVE_CONCEPT • confidence 0.316"><span class="mention">parental leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.32</span></mark> may request a <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.430394" title="LEAVE_CONCEPT • confidence 0.430"><span class="mention">temporary reduced-work schedule</span><span class="entity-tag">LEAVE_CONCEPT · 0.43</span></mark> for <mark class="entity" data-type="DURATION" data-score="0.236752" title="DURATION • confidence 0.237"><span class="mention">up to 8 weeks</span><span class="entity-tag">DURATION · 0.24</span></mark>.
+
+The request should normally be submitted at least <mark class="entity" data-type="DURATION" data-score="0.268652" title="DURATION • confidence 0.269"><span class="mention">4 weeks</span><span class="entity-tag">DURATION · 0.27</span></mark> before the <mark class="entity" data-type="DATE" data-score="0.599783" title="DATE • confidence 0.600"><span class="mention">planned return date</span><span class="entity-tag">DATE · 0.60</span></mark>.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/parental_leave.md"
+                 data-entity-count="17">
+          <div class="chunk-meta">
+            <div>
+              <strong>parental_leave__chunk_002</strong>
+              <span class="source">parental_leave.md</span>
+            </div>
+            <span class="badge">17 entities</span>
+          </div>
+          <div class="chunk-text">The request should normally be submitted at least 4 weeks before the <mark class="entity" data-type="DATE" data-score="0.513485" title="DATE • confidence 0.513"><span class="mention">planned return date</span><span class="entity-tag">DATE · 0.51</span></mark>.
+
+<mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.418517" title="APPROVAL_REQUIREMENT • confidence 0.419"><span class="mention">Approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.42</span></mark> depends on role requirements, local law, and agreement with <mark class="entity" data-type="ORGANIZATION" data-score="0.320079" title="ORGANIZATION • confidence 0.320"><span class="mention">HR</span><span class="entity-tag">ORGANIZATION · 0.32</span></mark> and the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.438684" title="EMPLOYEE_TYPE • confidence 0.439"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.44</span></mark>&#x27;s manager.
+
+<mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.228924" title="WORK_ARRANGEMENT • confidence 0.229"><span class="mention">Remote work</span><span class="entity-tag">WORK_ARRANGEMENT · 0.23</span></mark> after <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.347021" title="LEAVE_CONCEPT • confidence 0.347"><span class="mention">parental leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.35</span></mark>.
+
+Returning from <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.398873" title="LEAVE_CONCEPT • confidence 0.399"><span class="mention">parental leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.40</span></mark> does not automatically create an additional <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.622446" title="REMOTE_WORK_ALLOWANCE • confidence 0.622"><span class="mention">remote-work allowance</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.62</span></mark>.
+
+Any <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.597471" title="WORK_ARRANGEMENT • confidence 0.597"><span class="mention">remote-work arrangement</span><span class="entity-tag">WORK_ARRANGEMENT · 0.60</span></mark> must follow <mark class="entity" data-type="POLICY" data-score="0.783734" title="POLICY • confidence 0.784"><span class="mention">Remote Work Policy HR-RMT-0204</span><span class="entity-tag">POLICY · 0.78</span></mark> unless a <mark class="entity" data-type="EXCEPTION" data-score="0.575348" title="EXCEPTION • confidence 0.575"><span class="mention">specific temporary exception</span><span class="entity-tag">EXCEPTION · 0.58</span></mark> is approved.
+
+<mark class="entity" data-type="LEAVE_RULE" data-score="0.494363" title="LEAVE_RULE • confidence 0.494"><span class="mention">Annual leave interaction</span><span class="entity-tag">LEAVE_RULE · 0.49</span></mark>.
+
+<mark class="entity" data-type="EXCEPTION" data-score="0.239167" title="EXCEPTION • confidence 0.239"><span class="mention">Company-paid transition days</span><span class="entity-tag">EXCEPTION · 0.24</span></mark> are not deducted from the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.514367" title="EMPLOYEE_TYPE • confidence 0.514"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.51</span></mark>&#x27;s annual-leave balance.
+
+Unused <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.379722" title="LEAVE_CONCEPT • confidence 0.380"><span class="mention">annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.38</span></mark> remains governed by <mark class="entity" data-type="POLICY" data-score="0.778085" title="POLICY • confidence 0.778"><span class="mention">Annual Leave Policy HR-LEV-0101</span><span class="entity-tag">POLICY · 0.78</span></mark>, including its <mark class="entity" data-type="LEAVE_RULE" data-score="0.530922" title="LEAVE_RULE • confidence 0.531"><span class="mention">carry-forward rules</span><span class="entity-tag">LEAVE_RULE · 0.53</span></mark>.
+
+Examples.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/parental_leave.md"
+                 data-entity-count="14">
+          <div class="chunk-meta">
+            <div>
+              <strong>parental_leave__chunk_003</strong>
+              <span class="source">parental_leave.md</span>
+            </div>
+            <span class="badge">14 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.398795" title="LEAVE_CONCEPT • confidence 0.399"><span class="mention">Unused annual leave</span><span class="entity-tag">LEAVE_CONCEPT · 0.40</span></mark> remains governed by <mark class="entity" data-type="POLICY" data-score="0.824120" title="POLICY • confidence 0.824"><span class="mention">Annual Leave Policy</span><span class="entity-tag">POLICY · 0.82</span></mark> <mark class="entity" data-type="POLICY" data-score="0.453299" title="POLICY • confidence 0.453"><span class="mention">HR-LEV-0101</span><span class="entity-tag">POLICY · 0.45</span></mark>, including its <mark class="entity" data-type="LEAVE_RULE" data-score="0.576558" title="LEAVE_RULE • confidence 0.577"><span class="mention">carry-forward rules</span><span class="entity-tag">LEAVE_RULE · 0.58</span></mark>.
+
+Examples.
+
+An eligible full-time <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.647846" title="EMPLOYEE_TYPE • confidence 0.648"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.65</span></mark> with <mark class="entity" data-type="DURATION" data-score="0.552626" title="DURATION • confidence 0.553"><span class="mention">18 months</span><span class="entity-tag">DURATION · 0.55</span></mark> of service may receive up to 5 <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.423780" title="REMOTE_WORK_ALLOWANCE • confidence 0.424"><span class="mention">company-paid transition days</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.42</span></mark>.
+An <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.605827" title="EMPLOYEE_TYPE • confidence 0.606"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.61</span></mark> with only <mark class="entity" data-type="DURATION" data-score="0.530115" title="DURATION • confidence 0.530"><span class="mention">8 months</span><span class="entity-tag">DURATION · 0.53</span></mark> of continuous service is not eligible for the <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.622376" title="REMOTE_WORK_ALLOWANCE • confidence 0.622"><span class="mention">company-paid transition days</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.62</span></mark> under this policy, although <mark class="entity" data-type="ENTITLEMENT" data-score="0.388179" title="ENTITLEMENT • confidence 0.388"><span class="mention">statutory rights</span><span class="entity-tag">ENTITLEMENT · 0.39</span></mark> may still apply.
+A returning <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.679786" title="EMPLOYEE_TYPE • confidence 0.680"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.68</span></mark> requesting <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.369343" title="REMOTE_WORK_ALLOWANCE • confidence 0.369"><span class="mention">temporary remote work</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.37</span></mark> must also consider <mark class="entity" data-type="POLICY" data-score="0.376868" title="POLICY • confidence 0.377"><span class="mention">HR-RMT-0204</span><span class="entity-tag">POLICY · 0.38</span></mark>.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/remote_work.md"
+                 data-entity-count="24">
+          <div class="chunk-meta">
+            <div>
+              <strong>remote_work__chunk_000</strong>
+              <span class="source">remote_work.md</span>
+            </div>
+            <span class="badge">24 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="ORGANIZATION" data-score="0.770379" title="ORGANIZATION • confidence 0.770"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.77</span></mark> <mark class="entity" data-type="POLICY" data-score="0.687386" title="POLICY • confidence 0.687"><span class="mention">Remote Work Policy</span><span class="entity-tag">POLICY · 0.69</span></mark>.
+
+<mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.825769" title="REMOTE_WORK_ALLOWANCE • confidence 0.826"><span class="mention">Standard remote-work allowance</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.83</span></mark>.
+
+<mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.561902" title="REMOTE_WORK_ALLOWANCE • confidence 0.562"><span class="mention">Remote-work allowances</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.56</span></mark> depend on <mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.262339" title="WORK_ARRANGEMENT • confidence 0.262"><span class="mention">contractual work location</span><span class="entity-tag">WORK_ARRANGEMENT · 0.26</span></mark> and <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.244934" title="LEAVE_CONCEPT • confidence 0.245"><span class="mention">team requirements</span><span class="entity-tag">LEAVE_CONCEPT · 0.24</span></mark>.
+
+<mark class="entity" data-type="COUNTRY" data-score="0.980382" title="COUNTRY • confidence 0.980"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.98</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.885558" title="EMPLOYEE_TYPE • confidence 0.886"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.89</span></mark> contracted in <mark class="entity" data-type="COUNTRY" data-score="0.942675" title="COUNTRY • confidence 0.943"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.94</span></mark> may normally work remotely for <mark class="entity" data-type="DURATION" data-score="0.602738" title="DURATION • confidence 0.603"><span class="mention">up to 3 days per week</span><span class="entity-tag">DURATION · 0.60</span></mark>, subject to <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.798811" title="APPROVAL_REQUIREMENT • confidence 0.799"><span class="mention">manager approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.80</span></mark> and <mark class="entity" data-type="POLICY" data-score="0.624256" title="POLICY • confidence 0.624"><span class="mention">team scheduling</span><span class="entity-tag">POLICY · 0.62</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.892552" title="EMPLOYEE_TYPE • confidence 0.893"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.89</span></mark> are normally expected to work from a <mark class="entity" data-type="ORGANIZATION" data-score="0.807284" title="ORGANIZATION • confidence 0.807"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.81</span></mark> office <mark class="entity" data-type="DURATION" data-score="0.398802" title="DURATION • confidence 0.399"><span class="mention">at least 2 days per week</span><span class="entity-tag">DURATION · 0.40</span></mark>.
+
+<mark class="entity" data-type="COUNTRY" data-score="0.964234" title="COUNTRY • confidence 0.964"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.96</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.913036" title="EMPLOYEE_TYPE • confidence 0.913"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.91</span></mark> contracted in <mark class="entity" data-type="COUNTRY" data-score="0.930057" title="COUNTRY • confidence 0.930"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.93</span></mark> may normally work remotely for <mark class="entity" data-type="DURATION" data-score="0.540311" title="DURATION • confidence 0.540"><span class="mention">up to 2 days per week</span><span class="entity-tag">DURATION · 0.54</span></mark>, subject to <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.775399" title="APPROVAL_REQUIREMENT • confidence 0.775"><span class="mention">manager approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.78</span></mark> and <mark class="entity" data-type="POLICY" data-score="0.662626" title="POLICY • confidence 0.663"><span class="mention">team scheduling</span><span class="entity-tag">POLICY · 0.66</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.886132" title="EMPLOYEE_TYPE • confidence 0.886"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.89</span></mark> are normally expected to work from a <mark class="entity" data-type="ORGANIZATION" data-score="0.797541" title="ORGANIZATION • confidence 0.798"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.80</span></mark> office <mark class="entity" data-type="DURATION" data-score="0.434566" title="DURATION • confidence 0.435"><span class="mention">at least 3 days per week</span><span class="entity-tag">DURATION · 0.43</span></mark>.
+
+Working from another country.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/remote_work.md"
+                 data-entity-count="19">
+          <div class="chunk-meta">
+            <div>
+              <strong>remote_work__chunk_001</strong>
+              <span class="source">remote_work.md</span>
+            </div>
+            <span class="badge">19 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="WORK_ARRANGEMENT" data-score="0.248204" title="WORK_ARRANGEMENT • confidence 0.248"><span class="mention">Working from another country</span><span class="entity-tag">WORK_ARRANGEMENT · 0.25</span></mark>.
+
+<mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.337838" title="REMOTE_WORK_ALLOWANCE • confidence 0.338"><span class="mention">Working remotely</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.34</span></mark> from a <mark class="entity" data-type="COUNTRY" data-score="0.472259" title="COUNTRY • confidence 0.472"><span class="mention">country</span><span class="entity-tag">COUNTRY · 0.47</span></mark> other than the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.423152" title="EMPLOYEE_TYPE • confidence 0.423"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.42</span></mark>&#x27;s contractual work location is not automatically covered by the <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.777626" title="REMOTE_WORK_ALLOWANCE • confidence 0.778"><span class="mention">normal weekly remote-work allowance</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.78</span></mark>.
+
+<mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.709829" title="REMOTE_WORK_ALLOWANCE • confidence 0.710"><span class="mention">Cross-border remote work</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.71</span></mark> requires <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.815858" title="APPROVAL_REQUIREMENT • confidence 0.816"><span class="mention">prior written approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.82</span></mark> from both <mark class="entity" data-type="ORGANIZATION" data-score="0.522302" title="ORGANIZATION • confidence 0.522"><span class="mention">HR</span><span class="entity-tag">ORGANIZATION · 0.52</span></mark> and the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.549285" title="EMPLOYEE_TYPE • confidence 0.549"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.55</span></mark>&#x27;s manager because <mark class="entity" data-type="REQUIREMENT" data-score="0.382060" title="REQUIREMENT • confidence 0.382"><span class="mention">tax</span><span class="entity-tag">REQUIREMENT · 0.38</span></mark>, <mark class="entity" data-type="POLICY" data-score="0.381439" title="POLICY • confidence 0.381"><span class="mention">immigration</span><span class="entity-tag">POLICY · 0.38</span></mark>, <mark class="entity" data-type="POLICY" data-score="0.444369" title="POLICY • confidence 0.444"><span class="mention">payroll</span><span class="entity-tag">POLICY · 0.44</span></mark>, <mark class="entity" data-type="POLICY" data-score="0.346280" title="POLICY • confidence 0.346"><span class="mention">information-security</span><span class="entity-tag">POLICY · 0.35</span></mark>, and <mark class="entity" data-type="REQUIREMENT" data-score="0.546260" title="REQUIREMENT • confidence 0.546"><span class="mention">employment-law requirements</span><span class="entity-tag">REQUIREMENT · 0.55</span></mark> may apply.
+
+<mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.463858" title="APPROVAL_REQUIREMENT • confidence 0.464"><span class="mention">Manager approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.46</span></mark> alone is not sufficient for <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.581769" title="REMOTE_WORK_ALLOWANCE • confidence 0.582"><span class="mention">cross-border remote work</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.58</span></mark>.
+
+<mark class="entity" data-type="REQUIREMENT" data-score="0.585077" title="REQUIREMENT • confidence 0.585"><span class="mention">Security requirements</span><span class="entity-tag">REQUIREMENT · 0.59</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.640127" title="EMPLOYEE_TYPE • confidence 0.640"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.64</span></mark> <mark class="entity" data-type="REMOTE_WORK_ALLOWANCE" data-score="0.516207" title="REMOTE_WORK_ALLOWANCE • confidence 0.516"><span class="mention">working remotely</span><span class="entity-tag">REMOTE_WORK_ALLOWANCE · 0.52</span></mark> must:</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/remote_work.md"
+                 data-entity-count="12">
+          <div class="chunk-meta">
+            <div>
+              <strong>remote_work__chunk_002</strong>
+              <span class="source">remote_work.md</span>
+            </div>
+            <span class="badge">12 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="POLICY" data-score="0.469933" title="POLICY • confidence 0.470"><span class="mention">Security requirements</span><span class="entity-tag">POLICY · 0.47</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.533907" title="EMPLOYEE_TYPE • confidence 0.534"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.53</span></mark> working remotely must:
+
+use the company-managed device for <mark class="entity" data-type="COMPANY_RESOURCE" data-score="0.204632" title="COMPANY_RESOURCE • confidence 0.205"><span class="mention">company work</span><span class="entity-tag">COMPANY_RESOURCE · 0.20</span></mark>;
+connect through the approved VPN when required;
+follow <mark class="entity" data-type="POLICY" data-score="0.565363" title="POLICY • confidence 0.565"><span class="mention">FakeCompanyABC information-security rules</span><span class="entity-tag">POLICY · 0.57</span></mark>;
+<mark class="entity" data-type="EXCEPTION" data-score="0.332546" title="EXCEPTION • confidence 0.333"><span class="mention">prevent unauthorized persons from accessing company information</span><span class="entity-tag">EXCEPTION · 0.33</span></mark>;
+report loss or theft of <mark class="entity" data-type="COMPANY_RESOURCE" data-score="0.207268" title="COMPANY_RESOURCE • confidence 0.207"><span class="mention">company devices</span><span class="entity-tag">COMPANY_RESOURCE · 0.21</span></mark> immediately.
+
+<mark class="entity" data-type="EXCEPTION" data-score="0.827211" title="EXCEPTION • confidence 0.827"><span class="mention">Temporary exceptions</span><span class="entity-tag">EXCEPTION · 0.83</span></mark>.
+
+A <mark class="entity" data-type="JOB_ROLE" data-score="0.854319" title="JOB_ROLE • confidence 0.854"><span class="mention">department director</span><span class="entity-tag">JOB_ROLE · 0.85</span></mark> may approve a <mark class="entity" data-type="EXCEPTION" data-score="0.651702" title="EXCEPTION • confidence 0.652"><span class="mention">temporary exception</span><span class="entity-tag">EXCEPTION · 0.65</span></mark> to the <mark class="entity" data-type="LEAVE_RULE" data-score="0.492445" title="LEAVE_RULE • confidence 0.492"><span class="mention">weekly office-attendance requirement</span><span class="entity-tag">LEAVE_RULE · 0.49</span></mark> for <mark class="entity" data-type="DURATION" data-score="0.630498" title="DURATION • confidence 0.630"><span class="mention">up to 4 consecutive weeks</span><span class="entity-tag">DURATION · 0.63</span></mark>.
+
+An exception to <mark class="entity" data-type="LEAVE_CONCEPT" data-score="0.376682" title="LEAVE_CONCEPT • confidence 0.377"><span class="mention">office attendance</span><span class="entity-tag">LEAVE_CONCEPT · 0.38</span></mark> does not automatically authorize cross-border remote work.
+
+Examples.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/remote_work.md"
+                 data-entity-count="19">
+          <div class="chunk-meta">
+            <div>
+              <strong>remote_work__chunk_003</strong>
+              <span class="source">remote_work.md</span>
+            </div>
+            <span class="badge">19 entities</span>
+          </div>
+          <div class="chunk-text">An <mark class="entity" data-type="EXCEPTION" data-score="0.290967" title="EXCEPTION • confidence 0.291"><span class="mention">exception</span><span class="entity-tag">EXCEPTION · 0.29</span></mark> to <mark class="entity" data-type="LEAVE_RULE" data-score="0.461888" title="LEAVE_RULE • confidence 0.462"><span class="mention">office attendance</span><span class="entity-tag">LEAVE_RULE · 0.46</span></mark> does not automatically authorize cross-border remote work.
+
+Examples.
+
+A <mark class="entity" data-type="COUNTRY" data-score="0.822569" title="COUNTRY • confidence 0.823"><span class="mention">Germany-based</span><span class="entity-tag">COUNTRY · 0.82</span></mark> <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.609341" title="EMPLOYEE_TYPE • confidence 0.609"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.61</span></mark> working from home in <mark class="entity" data-type="COUNTRY" data-score="0.960647" title="COUNTRY • confidence 0.961"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.96</span></mark> <mark class="entity" data-type="LIMIT" data-score="0.284577" title="LIMIT • confidence 0.285"><span class="mention">3 days</span><span class="entity-tag">LIMIT · 0.28</span></mark> in <mark class="entity" data-type="DURATION" data-score="0.584994" title="DURATION • confidence 0.585"><span class="mention">one week</span><span class="entity-tag">DURATION · 0.58</span></mark> may be allowed if the <mark class="entity" data-type="JOB_ROLE" data-score="0.456645" title="JOB_ROLE • confidence 0.457"><span class="mention">manager</span><span class="entity-tag">JOB_ROLE · 0.46</span></mark> approves.
+A <mark class="entity" data-type="COUNTRY" data-score="0.386690" title="COUNTRY • confidence 0.387"><span class="mention">Pakistan-based</span><span class="entity-tag">COUNTRY · 0.39</span></mark> <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.595803" title="EMPLOYEE_TYPE • confidence 0.596"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.60</span></mark> normally has a maximum of <mark class="entity" data-type="LIMIT" data-score="0.314930" title="LIMIT • confidence 0.315"><span class="mention">2 remote days per week</span><span class="entity-tag">LIMIT · 0.31</span></mark>.
+A <mark class="entity" data-type="COUNTRY" data-score="0.844654" title="COUNTRY • confidence 0.845"><span class="mention">Germany-based</span><span class="entity-tag">COUNTRY · 0.84</span></mark> <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.576894" title="EMPLOYEE_TYPE • confidence 0.577"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.58</span></mark> who wants to work from <mark class="entity" data-type="COUNTRY" data-score="0.843466" title="COUNTRY • confidence 0.843"><span class="mention">Spain</span><span class="entity-tag">COUNTRY · 0.84</span></mark> for <mark class="entity" data-type="DURATION" data-score="0.622507" title="DURATION • confidence 0.623"><span class="mention">one week</span><span class="entity-tag">DURATION · 0.62</span></mark> needs <mark class="entity" data-type="ORGANIZATION" data-score="0.342158" title="ORGANIZATION • confidence 0.342"><span class="mention">HR</span><span class="entity-tag">ORGANIZATION · 0.34</span></mark> and <mark class="entity" data-type="JOB_ROLE" data-score="0.235277" title="JOB_ROLE • confidence 0.235"><span class="mention">manager</span><span class="entity-tag">JOB_ROLE · 0.24</span></mark> <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.530757" title="APPROVAL_REQUIREMENT • confidence 0.531"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.53</span></mark> even if the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.276102" title="EMPLOYEE_TYPE • confidence 0.276"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.28</span></mark> has unused remote-work days.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/travel_policy.md"
+                 data-entity-count="25">
+          <div class="chunk-meta">
+            <div>
+              <strong>travel_policy__chunk_000</strong>
+              <span class="source">travel_policy.md</span>
+            </div>
+            <span class="badge">25 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="ORGANIZATION" data-score="0.201976" title="ORGANIZATION • confidence 0.202"><span class="mention">FakeCompanyABC</span><span class="entity-tag">ORGANIZATION · 0.20</span></mark> <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.641704" title="BUSINESS_TRAVEL • confidence 0.642"><span class="mention">Business Travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.64</span></mark> Policy.
+
+<mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.384959" title="APPROVAL_REQUIREMENT • confidence 0.385"><span class="mention">Approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.38</span></mark>.
+
+All <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.659762" title="BUSINESS_TRAVEL • confidence 0.660"><span class="mention">business travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.66</span></mark> must be approved by the employee&#x27;s <mark class="entity" data-type="JOB_ROLE" data-score="0.474998" title="JOB_ROLE • confidence 0.475"><span class="mention">manager</span><span class="entity-tag">JOB_ROLE · 0.47</span></mark> before booking.
+
+<mark class="entity" data-type="TRANSPORT_MODE" data-score="0.666510" title="TRANSPORT_MODE • confidence 0.667"><span class="mention">International travel</span><span class="entity-tag">TRANSPORT_MODE · 0.67</span></mark> additionally requires the <mark class="entity" data-type="POLICY" data-score="0.390265" title="POLICY • confidence 0.390"><span class="mention">cost center</span><span class="entity-tag">POLICY · 0.39</span></mark> to be identified before booking.
+
+<mark class="entity" data-type="TRANSPORT_MODE" data-score="0.693875" title="TRANSPORT_MODE • confidence 0.694"><span class="mention">Air travel</span><span class="entity-tag">TRANSPORT_MODE · 0.69</span></mark>.
+
+For <mark class="entity" data-type="TRANSPORT_MODE" data-score="0.584638" title="TRANSPORT_MODE • confidence 0.585"><span class="mention">flights</span><span class="entity-tag">TRANSPORT_MODE · 0.58</span></mark> with a <mark class="entity" data-type="DURATION" data-score="0.842258" title="DURATION • confidence 0.842"><span class="mention">scheduled duration</span><span class="entity-tag">DURATION · 0.84</span></mark> of <mark class="entity" data-type="DURATION" data-score="0.469086" title="DURATION • confidence 0.469"><span class="mention">6 hours or less</span><span class="entity-tag">DURATION · 0.47</span></mark>, <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.793686" title="EMPLOYEE_TYPE • confidence 0.794"><span class="mention">employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.79</span></mark> should book <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.236395" title="BUSINESS_TRAVEL • confidence 0.236"><span class="mention">economy class</span><span class="entity-tag">BUSINESS_TRAVEL · 0.24</span></mark>.
+
+For <mark class="entity" data-type="TRANSPORT_MODE" data-score="0.600435" title="TRANSPORT_MODE • confidence 0.600"><span class="mention">flights</span><span class="entity-tag">TRANSPORT_MODE · 0.60</span></mark> with a <mark class="entity" data-type="DURATION" data-score="0.788079" title="DURATION • confidence 0.788"><span class="mention">scheduled duration</span><span class="entity-tag">DURATION · 0.79</span></mark> of more than <mark class="entity" data-type="DURATION" data-score="0.364561" title="DURATION • confidence 0.365"><span class="mention">6 hours</span><span class="entity-tag">DURATION · 0.36</span></mark>, <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.295880" title="BUSINESS_TRAVEL • confidence 0.296"><span class="mention">premium economy</span><span class="entity-tag">BUSINESS_TRAVEL · 0.30</span></mark> may be booked with <mark class="entity" data-type="JOB_ROLE" data-score="0.312305" title="JOB_ROLE • confidence 0.312"><span class="mention">manager</span><span class="entity-tag">JOB_ROLE · 0.31</span></mark> <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.278118" title="APPROVAL_REQUIREMENT • confidence 0.278"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.28</span></mark>.
+
+<mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.416711" title="BUSINESS_TRAVEL • confidence 0.417"><span class="mention">Business class</span><span class="entity-tag">BUSINESS_TRAVEL · 0.42</span></mark> requires director-level <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.337067" title="APPROVAL_REQUIREMENT • confidence 0.337"><span class="mention">approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.34</span></mark> and a documented business justification.
+
+<mark class="entity" data-type="LIMIT" data-score="0.566381" title="LIMIT • confidence 0.566"><span class="mention">Hotel limits</span><span class="entity-tag">LIMIT · 0.57</span></mark> — <mark class="entity" data-type="POLICY" data-score="0.466828" title="POLICY • confidence 0.467"><span class="mention">current policy</span><span class="entity-tag">POLICY · 0.47</span></mark>.
+
+The following <mark class="entity" data-type="LIMIT" data-score="0.570821" title="LIMIT • confidence 0.571"><span class="mention">nightly hotel limits</span><span class="entity-tag">LIMIT · 0.57</span></mark> apply from <mark class="entity" data-type="DATE" data-score="0.953541" title="DATE • confidence 0.954"><span class="mention">1 January 2026</span><span class="entity-tag">DATE · 0.95</span></mark>:</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/travel_policy.md"
+                 data-entity-count="25">
+          <div class="chunk-meta">
+            <div>
+              <strong>travel_policy__chunk_001</strong>
+              <span class="source">travel_policy.md</span>
+            </div>
+            <span class="badge">25 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="POLICY" data-score="0.677357" title="POLICY • confidence 0.677"><span class="mention">Hotel limits</span><span class="entity-tag">POLICY · 0.68</span></mark> — <mark class="entity" data-type="POLICY" data-score="0.490813" title="POLICY • confidence 0.491"><span class="mention">current policy</span><span class="entity-tag">POLICY · 0.49</span></mark>.
+
+The following nightly <mark class="entity" data-type="TIME_CONSTRAINT" data-score="0.358862" title="TIME_CONSTRAINT • confidence 0.359"><span class="mention">hotel limits</span><span class="entity-tag">TIME_CONSTRAINT · 0.36</span></mark> apply from <mark class="entity" data-type="DATE" data-score="0.907513" title="DATE • confidence 0.908"><span class="mention">1 January 2026</span><span class="entity-tag">DATE · 0.91</span></mark>:
+
+<mark class="entity" data-type="COUNTRY" data-score="0.266210" title="COUNTRY • confidence 0.266"><span class="mention">Location</span><span class="entity-tag">COUNTRY · 0.27</span></mark>. <mark class="entity" data-type="MONEY_AMOUNT" data-score="0.411031" title="MONEY_AMOUNT • confidence 0.411"><span class="mention">Maximum reimbursable room rate per night</span><span class="entity-tag">MONEY_AMOUNT · 0.41</span></mark>.
+<mark class="entity" data-type="COUNTRY" data-score="0.967703" title="COUNTRY • confidence 0.968"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.97</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.935864" title="CURRENCY • confidence 0.936"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.94</span></mark> 160.
+<mark class="entity" data-type="COUNTRY" data-score="0.920945" title="COUNTRY • confidence 0.921"><span class="mention">Belgium</span><span class="entity-tag">COUNTRY · 0.92</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.948404" title="CURRENCY • confidence 0.948"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.95</span></mark> 170.
+<mark class="entity" data-type="COUNTRY" data-score="0.957325" title="COUNTRY • confidence 0.957"><span class="mention">Spain</span><span class="entity-tag">COUNTRY · 0.96</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.979622" title="CURRENCY • confidence 0.980"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.98</span></mark> 150.
+<mark class="entity" data-type="COUNTRY" data-score="0.977929" title="COUNTRY • confidence 0.978"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.98</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.903403" title="CURRENCY • confidence 0.903"><span class="mention">PKR</span><span class="entity-tag">CURRENCY · 0.90</span></mark> 32,000.
+
+The limit applies to the room rate including mandatory hotel taxes, but excluding separately charged breakfast where breakfast is reimbursable under the <mark class="entity" data-type="EXPENSE_CONCEPT" data-score="0.557481" title="EXPENSE_CONCEPT • confidence 0.557"><span class="mention">expense policy</span><span class="entity-tag">EXPENSE_CONCEPT · 0.56</span></mark>.
+
+A higher rate may be reimbursed only if <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.266561" title="APPROVAL_REQUIREMENT • confidence 0.267"><span class="mention">approved before booking</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.27</span></mark> by the <mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.350660" title="EMPLOYEE_TYPE • confidence 0.351"><span class="mention">employee</span><span class="entity-tag">EMPLOYEE_TYPE · 0.35</span></mark>&#x27;s <mark class="entity" data-type="JOB_ROLE" data-score="0.431874" title="JOB_ROLE • confidence 0.432"><span class="mention">manager</span><span class="entity-tag">JOB_ROLE · 0.43</span></mark> and the <mark class="entity" data-type="JOB_ROLE" data-score="0.221930" title="JOB_ROLE • confidence 0.222"><span class="mention">relevant cost-center owner</span><span class="entity-tag">JOB_ROLE · 0.22</span></mark>.
+
+<mark class="entity" data-type="POLICY" data-score="0.574397" title="POLICY • confidence 0.574"><span class="mention">Historical limits</span><span class="entity-tag">POLICY · 0.57</span></mark> — do not use for <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.280533" title="BUSINESS_TRAVEL • confidence 0.281"><span class="mention">travel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.28</span></mark> from 2026 onward.
+
+Under <mark class="entity" data-type="POLICY" data-score="0.242258" title="POLICY • confidence 0.242"><span class="mention">version 3.2</span><span class="entity-tag">POLICY · 0.24</span></mark>, effective from <mark class="entity" data-type="DATE" data-score="0.873327" title="DATE • confidence 0.873"><span class="mention">1 January 2025</span><span class="entity-tag">DATE · 0.87</span></mark> through <mark class="entity" data-type="DATE" data-score="0.834215" title="DATE • confidence 0.834"><span class="mention">31 December 2025</span><span class="entity-tag">DATE · 0.83</span></mark>, the <mark class="entity" data-type="TIME_CONSTRAINT" data-score="0.467501" title="TIME_CONSTRAINT • confidence 0.468"><span class="mention">hotel limits</span><span class="entity-tag">TIME_CONSTRAINT · 0.47</span></mark> were:</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/travel_policy.md"
+                 data-entity-count="23">
+          <div class="chunk-meta">
+            <div>
+              <strong>travel_policy__chunk_002</strong>
+              <span class="source">travel_policy.md</span>
+            </div>
+            <span class="badge">23 entities</span>
+          </div>
+          <div class="chunk-text">Under version 3.2, effective from <mark class="entity" data-type="DATE" data-score="0.896660" title="DATE • confidence 0.897"><span class="mention">1 January 2025</span><span class="entity-tag">DATE · 0.90</span></mark> through <mark class="entity" data-type="DATE" data-score="0.911296" title="DATE • confidence 0.911"><span class="mention">31 December 2025</span><span class="entity-tag">DATE · 0.91</span></mark>, the <mark class="entity" data-type="LIMIT" data-score="0.205291" title="LIMIT • confidence 0.205"><span class="mention">hotel limits</span><span class="entity-tag">LIMIT · 0.21</span></mark> were:
+
+<mark class="entity" data-type="COUNTRY" data-score="0.329317" title="COUNTRY • confidence 0.329"><span class="mention">Location</span><span class="entity-tag">COUNTRY · 0.33</span></mark>. <mark class="entity" data-type="TIME_PERIOD" data-score="0.413302" title="TIME_PERIOD • confidence 0.413"><span class="mention">2025</span><span class="entity-tag">TIME_PERIOD · 0.41</span></mark> <mark class="entity" data-type="MONEY_AMOUNT" data-score="0.429087" title="MONEY_AMOUNT • confidence 0.429"><span class="mention">maximum room rate per night</span><span class="entity-tag">MONEY_AMOUNT · 0.43</span></mark>.
+<mark class="entity" data-type="COUNTRY" data-score="0.983683" title="COUNTRY • confidence 0.984"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.98</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.957374" title="CURRENCY • confidence 0.957"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.96</span></mark> 130.
+<mark class="entity" data-type="COUNTRY" data-score="0.955982" title="COUNTRY • confidence 0.956"><span class="mention">Belgium</span><span class="entity-tag">COUNTRY · 0.96</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.967069" title="CURRENCY • confidence 0.967"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.97</span></mark> 145.
+<mark class="entity" data-type="COUNTRY" data-score="0.980089" title="COUNTRY • confidence 0.980"><span class="mention">Spain</span><span class="entity-tag">COUNTRY · 0.98</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.978639" title="CURRENCY • confidence 0.979"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.98</span></mark> 125.
+<mark class="entity" data-type="COUNTRY" data-score="0.983745" title="COUNTRY • confidence 0.984"><span class="mention">Pakistan</span><span class="entity-tag">COUNTRY · 0.98</span></mark>. <mark class="entity" data-type="CURRENCY" data-score="0.867513" title="CURRENCY • confidence 0.868"><span class="mention">PKR</span><span class="entity-tag">CURRENCY · 0.87</span></mark> 26,000.
+
+These values are retained here only for audit and historical-reference purposes.
+
+<mark class="entity" data-type="TRANSPORT_MODE" data-score="0.907066" title="TRANSPORT_MODE • confidence 0.907"><span class="mention">Rail travel</span><span class="entity-tag">TRANSPORT_MODE · 0.91</span></mark>.
+
+Standard class should normally be used for <mark class="entity" data-type="TRANSPORT_MODE" data-score="0.846838" title="TRANSPORT_MODE • confidence 0.847"><span class="mention">rail journeys</span><span class="entity-tag">TRANSPORT_MODE · 0.85</span></mark> under <mark class="entity" data-type="DURATION" data-score="0.858789" title="DURATION • confidence 0.859"><span class="mention">3 hours</span><span class="entity-tag">DURATION · 0.86</span></mark>.
+
+First class may be used for <mark class="entity" data-type="TRANSPORT_MODE" data-score="0.805858" title="TRANSPORT_MODE • confidence 0.806"><span class="mention">rail journeys</span><span class="entity-tag">TRANSPORT_MODE · 0.81</span></mark> of <mark class="entity" data-type="DURATION" data-score="0.728024" title="DURATION • confidence 0.728"><span class="mention">3 hours</span><span class="entity-tag">DURATION · 0.73</span></mark> or more if the fare is reasonable and <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.765565" title="APPROVAL_REQUIREMENT • confidence 0.766"><span class="mention">manager approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.77</span></mark> has been obtained.
+
+<mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.674651" title="BUSINESS_TRAVEL • confidence 0.675"><span class="mention">Booking channels</span><span class="entity-tag">BUSINESS_TRAVEL · 0.67</span></mark>.
+
+<mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.701900" title="EMPLOYEE_TYPE • confidence 0.702"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.70</span></mark> should use the <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.276670" title="BUSINESS_TRAVEL • confidence 0.277"><span class="mention">approved corporate travel provider</span><span class="entity-tag">BUSINESS_TRAVEL · 0.28</span></mark> when it is available for the destination.</div>
+        </section>
+        
+
+        <section class="chunk-card"
+                 data-source="../dataset/travel_policy.md"
+                 data-entity-count="21">
+          <div class="chunk-meta">
+            <div>
+              <strong>travel_policy__chunk_003</strong>
+              <span class="source">travel_policy.md</span>
+            </div>
+            <span class="badge">21 entities</span>
+          </div>
+          <div class="chunk-text"><mark class="entity" data-type="EMPLOYEE_TYPE" data-score="0.606799" title="EMPLOYEE_TYPE • confidence 0.607"><span class="mention">Employees</span><span class="entity-tag">EMPLOYEE_TYPE · 0.61</span></mark> should use the <mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.568077" title="BUSINESS_TRAVEL • confidence 0.568"><span class="mention">approved corporate travel provider</span><span class="entity-tag">BUSINESS_TRAVEL · 0.57</span></mark> when it is available for the destination.
+
+<mark class="entity" data-type="BUSINESS_TRAVEL" data-score="0.265929" title="BUSINESS_TRAVEL • confidence 0.266"><span class="mention">Bookings made outside the approved channel</span><span class="entity-tag">BUSINESS_TRAVEL · 0.27</span></mark> must include a short justification when the expense claim is submitted.
+
+Exact identifier note.
+
+This policy is identified as <mark class="entity" data-type="POLICY" data-score="0.760616" title="POLICY • confidence 0.761"><span class="mention">HR-TRV-0173</span><span class="entity-tag">POLICY · 0.76</span></mark>. Questions referring to &quot;<mark class="entity" data-type="POLICY" data-score="0.439224" title="POLICY • confidence 0.439"><span class="mention">TRV-0173</span><span class="entity-tag">POLICY · 0.44</span></mark>&quot;, &quot;<mark class="entity" data-type="POLICY" data-score="0.691074" title="POLICY • confidence 0.691"><span class="mention">HR-TRV-0173</span><span class="entity-tag">POLICY · 0.69</span></mark>&quot;, or &quot;<mark class="entity" data-type="POLICY" data-score="0.668213" title="POLICY • confidence 0.668"><span class="mention">travel policy 0173</span><span class="entity-tag">POLICY · 0.67</span></mark>&quot; refer to this policy.
+
+Examples.
+
+A hotel in <mark class="entity" data-type="COUNTRY" data-score="0.960064" title="COUNTRY • confidence 0.960"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.96</span></mark> costing <mark class="entity" data-type="CURRENCY" data-score="0.974658" title="CURRENCY • confidence 0.975"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.97</span></mark> 155 per night is within the <mark class="entity" data-type="DATE" data-score="0.272439" title="DATE • confidence 0.272"><span class="mention">2026</span><span class="entity-tag">DATE · 0.27</span></mark> <mark class="entity" data-type="LIMIT" data-score="0.555155" title="LIMIT • confidence 0.555"><span class="mention">standard limit</span><span class="entity-tag">LIMIT · 0.56</span></mark>.
+A <mark class="entity" data-type="COUNTRY" data-score="0.969504" title="COUNTRY • confidence 0.970"><span class="mention">Germany</span><span class="entity-tag">COUNTRY · 0.97</span></mark> hotel costing <mark class="entity" data-type="CURRENCY" data-score="0.986630" title="CURRENCY • confidence 0.987"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.99</span></mark> 145 per night was above the <mark class="entity" data-type="LIMIT" data-score="0.561186" title="LIMIT • confidence 0.561"><span class="mention">standard 2025 limit</span><span class="entity-tag">LIMIT · 0.56</span></mark> but is below the <mark class="entity" data-type="LIMIT" data-score="0.412827" title="LIMIT • confidence 0.413"><span class="mention">2026 limit</span><span class="entity-tag">LIMIT · 0.41</span></mark>.
+A <mark class="entity" data-type="COUNTRY" data-score="0.848194" title="COUNTRY • confidence 0.848"><span class="mention">Spain</span><span class="entity-tag">COUNTRY · 0.85</span></mark> hotel costing <mark class="entity" data-type="CURRENCY" data-score="0.982673" title="CURRENCY • confidence 0.983"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.98</span></mark> 158 per night in <mark class="entity" data-type="DATE" data-score="0.805497" title="DATE • confidence 0.805"><span class="mention">2026</span><span class="entity-tag">DATE · 0.81</span></mark> requires <mark class="entity" data-type="APPROVAL_REQUIREMENT" data-score="0.682170" title="APPROVAL_REQUIREMENT • confidence 0.682"><span class="mention">advance approval</span><span class="entity-tag">APPROVAL_REQUIREMENT · 0.68</span></mark> because the <mark class="entity" data-type="LIMIT" data-score="0.714712" title="LIMIT • confidence 0.715"><span class="mention">standard limit</span><span class="entity-tag">LIMIT · 0.71</span></mark> is <mark class="entity" data-type="CURRENCY" data-score="0.966561" title="CURRENCY • confidence 0.967"><span class="mention">EUR</span><span class="entity-tag">CURRENCY · 0.97</span></mark> 150.</div>
+        </section>
+        
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  const sourceFilter = document.getElementById("sourceFilter");
+  const typeFilter = document.getElementById("typeFilter");
+  const threshold = document.getElementById("threshold");
+  const thresholdValue = document.getElementById("thresholdValue");
+  const visibleCount = document.getElementById("visibleCount");
+
+  const cards = [...document.querySelectorAll(".chunk-card")];
+  const allEntities = [...document.querySelectorAll("mark.entity")];
+
+  // Stable deterministic color from entity type.
+  function hueForType(type) {
+    let hash = 0;
+    for (let i = 0; i < type.length; i++) {
+      hash = ((hash << 5) - hash) + type.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash) % 360;
+  }
+
+  allEntities.forEach(el => {
+    el.style.setProperty("--hue", hueForType(el.dataset.type));
+  });
+
+  function update() {
+    const source = sourceFilter.value;
+    const type = typeFilter.value;
+    const minScore = Number(threshold.value);
+
+    thresholdValue.textContent = minScore.toFixed(2);
+
+    let shownCards = 0;
+    let shownEntities = 0;
+
+    cards.forEach(card => {
+      const sourceMatches = !source || card.dataset.source === source;
+      const entities = [...card.querySelectorAll("mark.entity")];
+
+      let matchingEntities = 0;
+
+      entities.forEach(el => {
+        const scoreMatches = Number(el.dataset.score) >= minScore;
+        const typeMatches = !type || el.dataset.type === type;
+        const visible = scoreMatches && typeMatches;
+
+        el.classList.toggle("filtered-out", !visible);
+
+        if (visible) matchingEntities++;
+      });
+
+      const cardVisible = sourceMatches && matchingEntities > 0;
+      card.classList.toggle("hidden", !cardVisible);
+
+      if (cardVisible) {
+        shownCards++;
+        shownEntities += matchingEntities;
+      }
+    });
+
+    visibleCount.textContent =
+      `${shownEntities} entities in ${shownCards} chunks`;
+  }
+
+  sourceFilter.addEventListener("change", update);
+  typeFilter.addEventListener("change", update);
+  threshold.addEventListener("input", update);
+
+  update();
+})();
+</script>
+</body>
+</html>
